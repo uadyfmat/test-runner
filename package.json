@@ -1,0 +1,12 @@
+{
+  "name": "coding-exercise",
+  "version": "1.0.0",
+  "main": "test.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "dependencies": {
+    "ascii-table": "^0.0.9",
+    "shelljs": "^0.8.4"
+  }
+}
