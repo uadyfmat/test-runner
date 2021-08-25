@@ -42,9 +42,14 @@ function testSolution(parsedSpec, ignoreEndingNewLine = true) {
   for (let testCase of parsedSpec) {
     const result = shell.exec(`echo ${testCase.in} | sh ./run`, {
       silent: true,
-    }).stdout;
+    });
 
-    let actualOutput = result;
+    if (result.stderr !== "") {
+      console.error(result.stderr);
+      process.exit(1);
+    }
+
+    let actualOutput = result.stdout;
     let expectedOutput = testCase.out;
 
     if (ignoreEndingNewLine) {
