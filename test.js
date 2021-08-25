@@ -29,12 +29,176 @@ const fs = require("fs");
 const shell = require("shelljs");
 const AsciiTable = require("ascii-table");
 
-const specFilePath = "./spec.inout";
+const SPEC_FILE_PATH = "./spec.inout";
 
-function parseSpec(specFilePath) {
-  const content = fs.readFileSync(specFilePath, { encoding: "utf8" });
-  return JSON.parse(content);
+/* -------------------- */
+/* --- File parsing --- */
+/* -------------------- */
+
+const IN_BLOCK_DELIMITER = "//";
+const OUT_BLOCK_DELIMITER = "$$";
+
+function updateOnBlockDelimiterFound({
+  blockDelimiter,
+  blockDelimsCounter,
+  blocksDelimsOpened,
+  blocksDelimsSequence,
+}) {
+  blockDelimsCounter.set(
+    blockDelimiter,
+    blockDelimsCounter.get(blockDelimiter) + 1
+  );
+
+  if (blockDelimsCounter.get(blockDelimiter) % 2 == 1) {
+    blocksDelimsOpened.set(blockDelimiter, blockDelimiter);
+  } else {
+    blocksDelimsOpened.delete(blockDelimiter);
+  }
+
+  blocksDelimsSequence.push(blockDelimiter);
 }
+
+/**
+ * Return true when an IN_DELIMITER is not preceded by an IN_DELIMITER.
+ * Return false otherwise.
+ *
+ * @param {string} currentLine
+ * @param {Array} blocksDelimsSequence
+ */
+function shouldCreateNewInOutObject(currentLine, blocksDelimsSequence) {
+  const amountOfDelims = blocksDelimsSequence.length;
+
+  if (
+    currentLine === IN_BLOCK_DELIMITER &&
+    blocksDelimsSequence[amountOfDelims - 1] === IN_BLOCK_DELIMITER &&
+    blocksDelimsSequence[amountOfDelims - 2] === OUT_BLOCK_DELIMITER
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
+/**
+ * Return the single opened block type, where types are:
+ * - In block: "in"
+ * - Out block: "out"
+ * The function assumes that there always is exactly one opened block.
+ *
+ * @param {Map} blocksDelimsOpened
+ */
+function getOpenedBlockType(blocksDelimsOpened) {
+  const delimiterOpened = blocksDelimsOpened.keys().next().value;
+
+  if (delimiterOpened === IN_BLOCK_DELIMITER) {
+    return "in";
+  }
+  if (delimiterOpened === OUT_BLOCK_DELIMITER) {
+    return "out";
+  }
+}
+
+// TODO: Validate spec.inout has correct format
+function parseSpec(specFilePath) {
+  const lines = fs
+    .readFileSync(specFilePath, { encoding: "utf8" })
+    .toString()
+    .split("\n");
+
+  // Steps:
+  // - Read each line.
+  //   - If it's IN_DELIM, then BLOCK_DELIMS_COUNTER.IN++
+  //   - If it's OUT_DELIM, then BLOCK_DELIMS_COUNTER.OUT++
+  //     (For either case, update BLOCKS_OPENED and BLOCK_DELIMS_SEQUENCE
+  //     after every update to BLOCK_DELIMS_COUNTER).
+  //
+  //     - Update BLOCKS_OPENED: If current delim number is odd,
+  //       then its open, add it to the map. If its even, remove
+  //       it from the map.
+  //     - Update BLOCK_DELIMS_SEQUENCE: Push the last delim found.
+  //
+  //   - If it's neither of them, add the line to an object's
+  //     key named "in" (for IN_DELIM) or "out" (for OUT_DELIM),
+  //     depending on the current opened block.
+  //
+  // - On every BLOCKS_OPENED update, validate if its valid (i.e.
+  //   it is a sequence "IN", "IN", "OUT", "OUT", etc.).If it is,
+  //   when "IN" is not precedec by "OUT", and current line is an
+  //   "IN", create new inOut object.
+  //
+  // Validation (performed after every block delim encounter):
+  // - Every block is closed.
+  // - No two consecutive blocks are of the same type.
+  // - An IN block always comes before an OUT block.
+  //
+  // Data structures:
+  //
+  // BLOCK_DELIMS_COUNTER
+  // {
+  //   IN: 2,
+  //   OUT: 1
+  // }
+  //
+  // // BLOCKS_OPENED
+  // {
+  // OUT: "OUT"
+  // }
+  //
+  // // BLOCK_DELIMS_SEQUENCE
+  // ["IN", "IN", "OUT"]
+
+  const parsedSpec = [];
+  let currentInOutObject = {};
+
+  const blockDelimsCounter = new Map();
+  const blocksDelimsOpened = new Map();
+  const blocksDelimsSequence = [];
+
+  blockDelimsCounter.set(IN_BLOCK_DELIMITER, 0);
+  blockDelimsCounter.set(OUT_BLOCK_DELIMITER, 0);
+
+  for (let line of lines) {
+    if (line === IN_BLOCK_DELIMITER) {
+      updateOnBlockDelimiterFound({
+        blockDelimiter: IN_BLOCK_DELIMITER,
+        blockDelimsCounter,
+        blocksDelimsOpened,
+        blocksDelimsSequence,
+      });
+    } else if (line === OUT_BLOCK_DELIMITER) {
+      updateOnBlockDelimiterFound({
+        blockDelimiter: OUT_BLOCK_DELIMITER,
+        blockDelimsCounter,
+        blocksDelimsOpened,
+        blocksDelimsSequence,
+      });
+    } else {
+      if (line === "") continue;
+
+      const openedBlockType = getOpenedBlockType(blocksDelimsOpened);
+
+      if (currentInOutObject.hasOwnProperty(openedBlockType)) {
+        currentInOutObject[openedBlockType] += line;
+      } else {
+        currentInOutObject[openedBlockType] = line;
+      }
+    }
+
+    if (shouldCreateNewInOutObject(line, blocksDelimsSequence)) {
+      parsedSpec.push(Object.assign({}, currentInOutObject));
+      currentInOutObject = {};
+    }
+  }
+
+  // Append last out block
+  parsedSpec.push(Object.assign({}, currentInOutObject));
+
+  return parsedSpec;
+}
+
+/* --------------------------- */
+/* --- Auxiliary functions --- */
+/* --------------------------- */
 
 function testSolution(parsedSpec, ignoreEndingNewLine = true) {
   const testResults = [];
@@ -44,6 +208,7 @@ function testSolution(parsedSpec, ignoreEndingNewLine = true) {
       silent: true,
     });
 
+    // Show compilation or interpretation errors
     if (result.stderr !== "") {
       console.error(result.stderr);
       process.exit(1);
@@ -84,7 +249,7 @@ function generateAsciiTableOutput(parsedSpec, testResults) {
 }
 
 function main() {
-  const parsedSpec = parseSpec(specFilePath);
+  const parsedSpec = parseSpec(SPEC_FILE_PATH);
   const testResults = testSolution(parsedSpec);
   const printableResults = generateAsciiTableOutput(parsedSpec, testResults);
 
