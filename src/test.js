@@ -29,7 +29,7 @@ const fs = require("fs");
 const shell = require("shelljs");
 const AsciiTable = require("ascii-table");
 
-const SPEC_FILE_PATH = "./spec.inout";
+const SPEC_FILE_PATH = "./src/spec.inout";
 
 /* ------------------------------ */
 /* --- File parsing functions --- */
@@ -212,7 +212,7 @@ function testSolution(parsedSpec, ignoreEndingNewLine = true) {
   const testResults = [];
 
   for (let testCase of parsedSpec) {
-    const result = shell.exec(`echo ${testCase.in} | sh ./run`, {
+    const result = shell.exec(`echo ${testCase.in} | bash ./run`, {
       silent: true,
     });
 

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "test.js",
   "scripts": {
-    "test": "node test.js"
+    "test": "node ./src/test.js"
   },
   "dependencies": {
     "ascii-table": "^0.0.9",
