@@ -31,14 +31,14 @@ const AsciiTable = require("ascii-table");
 
 const SPEC_FILE_PATH = "./spec.inout";
 
-/* -------------------- */
-/* --- File parsing --- */
-/* -------------------- */
+/* ------------------------------ */
+/* --- File parsing functions --- */
+/* ------------------------------ */
 
 const IN_BLOCK_DELIMITER = "//";
 const OUT_BLOCK_DELIMITER = "$$";
 
-function updateOnBlockDelimiterFound({
+function onBlockDelimiterFound({
   blockDelimiter,
   blockDelimsCounter,
   blocksDelimsOpened,
@@ -159,14 +159,14 @@ function parseSpec(specFilePath) {
 
   for (let line of lines) {
     if (line === IN_BLOCK_DELIMITER) {
-      updateOnBlockDelimiterFound({
+      onBlockDelimiterFound({
         blockDelimiter: IN_BLOCK_DELIMITER,
         blockDelimsCounter,
         blocksDelimsOpened,
         blocksDelimsSequence,
       });
     } else if (line === OUT_BLOCK_DELIMITER) {
-      updateOnBlockDelimiterFound({
+      onBlockDelimiterFound({
         blockDelimiter: OUT_BLOCK_DELIMITER,
         blockDelimsCounter,
         blocksDelimsOpened,
@@ -247,6 +247,10 @@ function generateAsciiTableOutput(parsedSpec, testResults) {
 
   return table.toString();
 }
+
+/* ---------------------- */
+/* --- Execution flow --- */
+/* ---------------------- */
 
 function main() {
   const parsedSpec = parseSpec(SPEC_FILE_PATH);
