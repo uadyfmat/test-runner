@@ -96,6 +96,8 @@ function getOpenedBlockType(blocksDelimsOpened) {
   if (delimiterOpened === OUT_BLOCK_DELIMITER) {
     return "out";
   }
+
+  return undefined;
 }
 
 // TODO: Validate spec.inout has correct format
@@ -130,6 +132,10 @@ function parseSpec(specFilePath) {
   // - Every block is closed.
   // - No two consecutive blocks are of the same type.
   // - An IN block always comes before an OUT block.
+  //
+  // Leeway:
+  // - Empty lines are allowed.
+  // - Text outside of blocks is allowed (is ignored).
   //
   // Data structures:
   //
@@ -173,9 +179,11 @@ function parseSpec(specFilePath) {
         blocksDelimsSequence,
       });
     } else {
-      if (line === "") continue;
+      if (line === "") continue; // Allow empty lines
 
       const openedBlockType = getOpenedBlockType(blocksDelimsOpened);
+
+      if (openedBlockType === undefined) continue; // Allow text outside of a block
 
       if (currentInOutObject.hasOwnProperty(openedBlockType)) {
         currentInOutObject[openedBlockType] += line;
