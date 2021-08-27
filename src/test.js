@@ -186,7 +186,7 @@ function parseSpec(specFilePath) {
       if (openedBlockType === undefined) continue; // Allow text outside of a block
 
       if (currentInOutObject.hasOwnProperty(openedBlockType)) {
-        currentInOutObject[openedBlockType] += line;
+        currentInOutObject[openedBlockType] += "\r\n" + line;
       } else {
         currentInOutObject[openedBlockType] = line;
       }
@@ -200,6 +200,8 @@ function parseSpec(specFilePath) {
 
   // Append last out block
   parsedSpec.push(Object.assign({}, currentInOutObject));
+
+  console.log(parsedSpec);
 
   return parsedSpec;
 }
@@ -221,6 +223,12 @@ function testSolution(parsedSpec, ignoreEndingNewLine = true) {
       console.error(result.stderr);
       process.exit(1);
     }
+
+    console.log(
+      result.stdout,
+      result.stdout === "no\nHello\n",
+      result.stdout === "no\r\nHello\r\n"
+    );
 
     let actualOutput = result.stdout;
     let expectedOutput = testCase.out;
