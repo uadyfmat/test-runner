@@ -1,21 +1,25 @@
-# Palindromes
+# Test runner
+
+Test a code file against stdin/stdout test cases written in a single, easy to read and write file.
+
+## Demo code exercise: Palindromes
 
 Un palíndromo es una cadena de caracteres que leída de izquierda a derecha o de derecha a izquierda lee igual. Por ejemplo: "amor a roma".
 
 Escribe un programa en Java, C, C++ o Python que lea, de entrada estándar, una cantidad variable de cadenas de caracteres e imprima a salida estándar "yes" cuando sí es un palíndromo; "no" de otra forma. El archivo debe llamarse `Solution`, p. ej.: `Solution.py`.
 
-## Entrada
+### Entrada
 
 Una cantidad variable de cadenas de caracteres en a-zA-Z (no caracteres especiales), puede contener espacios en blanco.
 
-## Salida
+### Salida
 
 El método `isPalindrome` debe devolver:
 
 - `yes` cuando la cadena es un palíndromo.
 - `no`, cuando no lo es.
 
-## Ejemplo
+### Ejemplo
 
 ```text
 ┌─┬──────────────────┬──────────────────┬──────────────────┐
@@ -29,7 +33,7 @@ El método `isPalindrome` debe devolver:
 └─┴──────────────────┴──────────────────┴──────────────────┘
 ```
 
-## Correr pruebas localmente
+### Correr pruebas localmente
 
 Verificar que se tenga node y npm instalados. Luego instalar las dependencias usando `npm install`.
 
