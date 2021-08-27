@@ -2,11 +2,11 @@
 
 Un palíndromo es una cadena de caracteres que leída de izquierda a derecha o de derecha a izquierda lee igual. Por ejemplo: "amor a roma".
 
-Escribe un programa en Java, C, C++ o Python que lea una cadena de caracteres de entrada estándar e imprima a salida estándar "yes" cuando sí es un palíndromo; "no" de otra forma. El archivo debe llamarse `Solution`, p. ej.: `Solution.py`.
+Escribe un programa en Java, C, C++ o Python que lea, de entrada estándar, una cantidad variable de cadenas de caracteres e imprima a salida estándar "yes" cuando sí es un palíndromo; "no" de otra forma. El archivo debe llamarse `Solution`, p. ej.: `Solution.py`.
 
 ## Entrada
 
-Una cadena de caracteres en a-zA-Z (no caracteres especiales), puede contener espacios en blanco.
+Una cantidad variable de cadenas de caracteres en a-zA-Z (no caracteres especiales), puede contener espacios en blanco.
 
 ## Salida
 
@@ -17,28 +17,24 @@ El método `isPalindrome` debe devolver:
 
 ## Ejemplo
 
-| Entrada (stdin) | Salida (stdout) |
-|---|---|
-|Amor a Roma|yes|
-|La casa es grande|no|
+```text
+┌─┬──────────────────┬──────────────────┬──────────────────┐
+│#│Input             │Output            │Passed            │
+├─┼──────────────────┼──────────────────┼──────────────────┤
+│1│Amor a Roma       │yes               │YES               │
+├─┼──────────────────┼──────────────────┼──────────────────┤
+│2│Amor a Roma       │yes               |NO                │
+│ │Salida a la casa  │no                │                  │
+│ │Anita lava la tina│yes               │                  │
+└─┴──────────────────┴──────────────────┴──────────────────┘
+```
 
 ## Correr pruebas localmente
 
-Verificar que se tenga node y npm instalados. Luego instalar las dependencias usando `npm i`.
+Verificar que se tenga node y npm instalados. Luego instalar las dependencias usando `npm install`.
 
 Luego ejecutar:
 
 ```text
 npm test
-```
-
-La salida puede verse algo como lo siguiente:
-
-```text
-.-----------------------------------------.
-| # |       Input       | Output | Passed |
-|---|-------------------|--------|--------|
-| 1 | Amor a Roma       | yes    | ❌      |
-| 2 | La casa es grande | no     | ✔️     |
-'-----------------------------------------'
 ```
