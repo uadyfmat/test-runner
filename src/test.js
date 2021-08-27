@@ -11,23 +11,25 @@
 //     out: "yes",
 //   },
 //   {
-//     in: "La casa es grande",
-//     out: "no",
+//     in: "La casa es grande\nSalida a la casa",
+//     out: "yes\nno",
 //   },
 // ];
 
 // Results in readable format:
-// .-----------------------------------------.
-// | # | Input             | Output | Passed |
-// |---|-------------------|--------|--------|
-// | 1 | Amor a Roma       | yes    | ✔️    |
-// | 2 | La casa es grande | no     | ❌    |
-// '-----------------------------------------'
-// See: https://www.npmjs.com/package/ascii-table
+// ┌─┬──────────────────┬──────────────────┬──────────────────┐
+// │#│Input             │Output            │Passed            │
+// ├─┼──────────────────┼──────────────────┼──────────────────┤
+// │1│Amor a Roma       │yes               │YES               │
+// ├─┼──────────────────┼──────────────────┼──────────────────┤
+// │2│Amor a Roma       │yes               │YES               │
+// │ │Salida a la casa  │no                │                  │
+// └─┴──────────────────┴──────────────────┴──────────────────┘
+// See: https://www.npmjs.com/package/le-table
 
 const fs = require("fs");
 const shell = require("shelljs");
-const AsciiTable = require("ascii-table");
+const LeTable = require("le-table");
 
 const SPEC_FILE_PATH = "./src/spec.inout";
 
@@ -187,8 +189,7 @@ function parseSpec(specFilePath) {
       if (openedBlockType === undefined) continue; // Allow text outside of a block
 
       if (currentInOutObject.hasOwnProperty(openedBlockType)) {
-        currentInOutObject[openedBlockType] +=
-          openedBlockType === "in" ? `\\n${line}` : `\n${line}`;
+        currentInOutObject[openedBlockType] += `\n${line}`;
       } else {
         currentInOutObject[openedBlockType] = line;
       }
@@ -203,8 +204,6 @@ function parseSpec(specFilePath) {
   // Append last out block
   parsedSpec.push(Object.assign({}, currentInOutObject));
 
-  console.log(parsedSpec);
-
   return parsedSpec;
 }
 
@@ -217,7 +216,7 @@ function testSolution(parsedSpec, ignoreEndingNewLine = true) {
 
   for (let testCase of parsedSpec) {
     const result = shell
-      .exec(`printf '${testCase.in}'`, {
+      .exec(`printf '${testCase.in.replace(/\n/g, "\\n")}'`, {
         silent: true,
       })
       .exec("bash ./run", {
@@ -238,13 +237,6 @@ function testSolution(parsedSpec, ignoreEndingNewLine = true) {
       expectedOutput = expectedOutput.replace(/(\r?\n)$/g, "");
     }
 
-    // console.log(
-    //   actualOutput,
-    //   actualOutput === "yes\r\nno\r\nno\r\n",
-    //   actualOutput === "yes\nno\nno\n",
-    //   actualOutput === "yes\nno\nno"
-    // );
-
     testResults.push(actualOutput === expectedOutput);
   }
 
@@ -256,19 +248,24 @@ function determineExitCode(testResults) {
 }
 
 function generateAsciiTableOutput(parsedSpec, testResults) {
+  const heading = ["#", "Input", "Output", "Passed"];
   const rows = [];
 
   for (let i = 0; i < parsedSpec.length; i++) {
-    const passed = testResults[i] ? "✔️" : "❌";
+    // See StackOverflow answer for console colors:
+    // https://stackoverflow.com/a/41407246/12591546
+    const passed = testResults[i] ? "\x1b[32mYES\x1b[0m" : "\x1b[31mNO\x1b[0m";
     rows.push([i + 1, parsedSpec[i].in, parsedSpec[i].out, passed]);
   }
 
-  const table = AsciiTable.factory({
-    heading: ["#", "Input", "Output", "Passed"],
-    rows,
-  });
+  const table = new LeTable();
 
-  return table.toString();
+  table.addRow(heading);
+  for (let row of rows) {
+    table.addRow(row);
+  }
+
+  return table.stringify();
 }
 
 /* ---------------------- */
