@@ -105,6 +105,7 @@ function parseSpec(specFilePath) {
   const lines = fs
     .readFileSync(specFilePath, { encoding: "utf8" })
     .toString()
+    .replace("/\r/g", "")
     .split("\n");
 
   // Steps:
@@ -186,7 +187,8 @@ function parseSpec(specFilePath) {
       if (openedBlockType === undefined) continue; // Allow text outside of a block
 
       if (currentInOutObject.hasOwnProperty(openedBlockType)) {
-        currentInOutObject[openedBlockType] += "\r\n" + line;
+        currentInOutObject[openedBlockType] +=
+          openedBlockType === "in" ? `\\n${line}` : `\n${line}`;
       } else {
         currentInOutObject[openedBlockType] = line;
       }
@@ -214,9 +216,13 @@ function testSolution(parsedSpec, ignoreEndingNewLine = true) {
   const testResults = [];
 
   for (let testCase of parsedSpec) {
-    const result = shell.exec(`echo ${testCase.in} | bash ./run`, {
-      silent: true,
-    });
+    const result = shell
+      .exec(`printf '${testCase.in}'`, {
+        silent: true,
+      })
+      .exec("bash ./run", {
+        silent: true,
+      });
 
     // Show compilation or interpretation errors
     if (result.stderr !== "") {
@@ -224,19 +230,20 @@ function testSolution(parsedSpec, ignoreEndingNewLine = true) {
       process.exit(1);
     }
 
-    console.log(
-      result.stdout,
-      result.stdout === "no\nHello\n",
-      result.stdout === "no\r\nHello\r\n"
-    );
-
-    let actualOutput = result.stdout;
+    let actualOutput = result.stdout.replace(/\r/g, "");
     let expectedOutput = testCase.out;
 
     if (ignoreEndingNewLine) {
       actualOutput = actualOutput.replace(/(\r?\n)$/g, "");
       expectedOutput = expectedOutput.replace(/(\r?\n)$/g, "");
     }
+
+    // console.log(
+    //   actualOutput,
+    //   actualOutput === "yes\r\nno\r\nno\r\n",
+    //   actualOutput === "yes\nno\nno\n",
+    //   actualOutput === "yes\nno\nno"
+    // );
 
     testResults.push(actualOutput === expectedOutput);
   }

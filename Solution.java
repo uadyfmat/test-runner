@@ -4,8 +4,12 @@ public class Solution {
 
   public static void main(String[] args) {
     Scanner scanner = new Scanner(System.in);
-    System.out.println(isPalindrome(scanner.nextLine()));
-    System.out.println("Hello");
+
+    while (scanner.hasNextLine()) {
+      String line = scanner.nextLine();
+      System.out.println(isPalindrome(line));
+    }
+
     scanner.close();
   }
 
