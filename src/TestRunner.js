@@ -32,8 +32,6 @@ const LeTable = require("le-table");
 
 const SpecParser = require("./SpecParser");
 
-const SPEC_FILE_PATH = "./src/spec.inout";
-
 function testSolution(parsedSpec, ignoreEndingNewLine = true) {
   const testResults = [];
 
@@ -42,7 +40,7 @@ function testSolution(parsedSpec, ignoreEndingNewLine = true) {
       .exec(`printf '${testCase.in.replace(/\n/g, "\\n")}'`, {
         silent: true,
       })
-      .exec("bash ./run", {
+      .exec(`bash ${__dirname}/run`, {
         silent: true,
       });
 
@@ -91,8 +89,9 @@ function generateAsciiTableOutput(parsedSpec, testResults) {
   return table.stringify();
 }
 
-function main() {
-  const parsedSpec = SpecParser.parseSpec(SPEC_FILE_PATH);
+function run(targetDirectory) {
+  // TODO use a path builder
+  const parsedSpec = SpecParser.parseSpec(targetDirectory + "/spec.inout");
   const testResults = testSolution(parsedSpec);
   const printableResults = generateAsciiTableOutput(parsedSpec, testResults);
 
@@ -101,4 +100,4 @@ function main() {
   process.exit(determineExitCode(testResults));
 }
 
-main();
+module.exports = { run };

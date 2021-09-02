@@ -1,12 +1,11 @@
 {
   "name": "coding-exercise",
   "version": "1.0.0",
-  "main": "./src/TestRunner.js",
-  "scripts": {
-    "test": "node ./src/TestRunner.js"
-  },
+  "main": "src/index.js",
+  "bin": "src/cli.js",
   "dependencies": {
     "le-table": "^6.1.10",
-    "shelljs": "^0.8.4"
+    "shelljs": "^0.8.4",
+    "yargs": "^17.1.1"
   }
 }
