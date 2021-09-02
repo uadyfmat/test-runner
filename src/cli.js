@@ -13,15 +13,17 @@ const argv = require("yargs")(process.argv.slice(2))
         default: ".",
       })
       .option("e", {
-        alias: "error-out",
+        alias: "error-on-test-fail",
         description: "Finish with exit code 1 when a test case fails.",
         type: "boolean",
         default: false,
       });
   })
-  // Add auto-help message and wrap at 100 chars
   .help()
-  .wrap(100)
+  .wrap(105)
   .locale("en").argv;
 
-TestRunner.run(argv.dir);
+TestRunner.run({
+  targetDirectory: argv.dir,
+  errorOnTestFail: argv.errorOnTestFail,
+});

@@ -64,8 +64,11 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
   return testResults;
 }
 
-function determineExitCode(testResults) {
-  return testResults.find((result) => result === false) === false ? 1 : 0;
+function determineExitCode(testResults, errorOnTestFail) {
+  if (errorOnTestFail) {
+    return testResults.find((result) => result === false) === false ? 1 : 0;
+  }
+  return 0;
 }
 
 function generateAsciiTableOutput(parsedSpec, testResults) {
@@ -89,7 +92,7 @@ function generateAsciiTableOutput(parsedSpec, testResults) {
   return table.stringify();
 }
 
-function run(targetDirectory) {
+function run({ targetDirectory, errorOnTestFail }) {
   // TODO use a path builder
   const parsedSpec = SpecParser.parseSpec(targetDirectory + "/spec.inout");
   const testResults = testSolution(parsedSpec, targetDirectory);
@@ -97,7 +100,7 @@ function run(targetDirectory) {
 
   console.log(printableResults); // Print results in readable form.
 
-  process.exit(determineExitCode(testResults));
+  process.exit(determineExitCode(testResults, errorOnTestFail));
 }
 
 module.exports = { run };
