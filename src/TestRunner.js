@@ -27,6 +27,8 @@
 // └─┴──────────────────┴──────────────────┴──────────────────┘
 // See: https://www.npmjs.com/package/le-table
 
+const path = require("path");
+
 const shell = require("shelljs");
 const LeTable = require("le-table");
 
@@ -92,13 +94,29 @@ function generateAsciiTableOutput(parsedSpec, testResults) {
   return table.stringify();
 }
 
-function run({ targetDirectory, errorOnTestFail }) {
-  // TODO use a path builder
-  const parsedSpec = SpecParser.parseSpec(targetDirectory + "/spec.inout");
-  const testResults = testSolution(parsedSpec, targetDirectory);
-  const printableResults = generateAsciiTableOutput(parsedSpec, testResults);
+function generateSummaryResults(testResults) {
+  const testsRun = testResults.length;
+  const failures = testResults.filter((result) => result === false).length;
 
-  console.log(printableResults); // Print results in readable form.
+  return `Tests run: ${testsRun}, Failures: ${failures}`;
+}
+
+function getExerciseHeading(targetDirectory) {
+  return "Exercise: " + path.basename(path.resolve(targetDirectory));
+}
+
+function run({ targetDirectory, errorOnTestFail }) {
+  const parsedSpec = SpecParser.parseSpec(
+    path.join(targetDirectory, "spec.inout")
+  );
+  const testResults = testSolution(parsedSpec, targetDirectory);
+  const exerciseHeading = getExerciseHeading(targetDirectory);
+  const summaryResulsts = generateSummaryResults(testResults);
+  const fullResults = generateAsciiTableOutput(parsedSpec, testResults);
+
+  console.log(exerciseHeading); // Print exercise heading
+  console.log(summaryResulsts); // Print results summary
+  console.log(fullResults); // Print full results
 
   process.exit(determineExitCode(testResults, errorOnTestFail));
 }
