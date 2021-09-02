@@ -102,7 +102,7 @@ function generateSummaryResults(testResults) {
 }
 
 function getExerciseHeading(targetDirectory) {
-  return "Exercise: " + path.basename(path.resolve(targetDirectory));
+  return `Exercise: ${path.basename(path.resolve(targetDirectory))}`;
 }
 
 function run({ targetDirectory, errorOnTestFail }) {

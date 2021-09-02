@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const TestRunner = require("./index").TestRunner;
+const TestRunner = require("./index");
 
 // Parse command line arguments
 const argv = require("yargs")(process.argv.slice(2))

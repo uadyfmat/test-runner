@@ -1,1 +1,1 @@
-module.exports = { TestRunner: require("./TestRunner") };
+module.exports = require("./TestRunner");
