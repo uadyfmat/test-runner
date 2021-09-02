@@ -32,7 +32,7 @@ const LeTable = require("le-table");
 
 const SpecParser = require("./SpecParser");
 
-function testSolution(parsedSpec, ignoreEndingNewLine = true) {
+function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
   const testResults = [];
 
   for (let testCase of parsedSpec) {
@@ -40,7 +40,7 @@ function testSolution(parsedSpec, ignoreEndingNewLine = true) {
       .exec(`printf '${testCase.in.replace(/\n/g, "\\n")}'`, {
         silent: true,
       })
-      .exec(`bash ${__dirname}/run`, {
+      .exec(`bash ${__dirname}/run ${targetDirectory}`, {
         silent: true,
       });
 
@@ -92,7 +92,7 @@ function generateAsciiTableOutput(parsedSpec, testResults) {
 function run(targetDirectory) {
   // TODO use a path builder
   const parsedSpec = SpecParser.parseSpec(targetDirectory + "/spec.inout");
-  const testResults = testSolution(parsedSpec);
+  const testResults = testSolution(parsedSpec, targetDirectory);
   const printableResults = generateAsciiTableOutput(parsedSpec, testResults);
 
   console.log(printableResults); // Print results in readable form.

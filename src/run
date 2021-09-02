@@ -1,11 +1,14 @@
 #!/bin/bash
 
+# Parameters:
+# $1: Directory where file-to-run lives.
+
 function clean {
   # Clean build files, if any
-  rm *.class 2> /dev/null
-  rm *.out 2> /dev/null
+  rm $1/*.class 2> /dev/null
+  rm $1/*.out 2> /dev/null
 }
-clean
+clean $1
 
 # Read standard input
 STDIN=$(cat -)
@@ -14,24 +17,24 @@ STDIN=$(cat -)
 entry_file_name=Solution
 
 # Find first file which matches expected entry
-entry_file=$(ls | grep ^${entry_file_name}[.].*$ | head -1)
+entry_file=$(ls $1 | grep ^${entry_file_name}[.].*$ | head -1)
 
 # Execute entry file with standard input
 case $entry_file in
   *.c)
-    gcc ${entry_file} -o "${entry_file_name}.out"
-    echo -e "${STDIN}" | "./${entry_file_name}.out"
+    gcc $1/${entry_file} -o "$1/${entry_file_name}.out"
+    echo -e "${STDIN}" | "$1/${entry_file_name}.out"
     ;;
   *.java)
-    javac ${entry_file}
-    echo -e "${STDIN}" | java ${entry_file_name}
+    javac $1/${entry_file}
+    echo -e "${STDIN}" | java -cp $1 ${entry_file_name}
     ;;
   *.py)
-    echo -e "${STDIN}" | python ${entry_file}
+    echo -e "${STDIN}" | python $1/${entry_file}
     ;;
   *.cpp)
-    g++ ${entry_file} -o "${entry_file_name}.out"
-    echo -e "${STDIN}" | "./${entry_file_name}.out"
+    g++ $1/${entry_file} -o "$1/${entry_file_name}.out"
+    echo -e "${STDIN}" | "$1/${entry_file_name}.out"
 esac
 
-clean
+clean $1
