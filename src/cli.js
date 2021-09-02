@@ -4,11 +4,12 @@ const TestRunner = require("./index");
 
 // Parse command line arguments
 const argv = require("yargs")(process.argv.slice(2))
-  .usage("Usage: $0 [options] [dir]")
+  .usage("Usage: test-runner [options] [dir]")
   .command("* [dir]", false, (command) => {
     command
       .positional("dir", {
-        description: "Directory of a compliant coding exercise.",
+        description: `Compliant coding exercise directory (i.e. has two files: a
+          Solution.{java|py|c|cpp} and a spec.inout)`,
         type: "string",
         default: ".",
       })
@@ -20,7 +21,7 @@ const argv = require("yargs")(process.argv.slice(2))
       });
   })
   .help()
-  .wrap(105)
+  .wrap(80)
   .locale("en").argv;
 
 TestRunner.run({
