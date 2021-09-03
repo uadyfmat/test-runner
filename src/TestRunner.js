@@ -1,38 +1,37 @@
 // Steps:
 // - Parse spec.inout.
 // - Test Solution.{ext} against every entry in spec.inout.
-//   this uses run to execute the solution file.
 // - Print the testing results into readable format.
 
-// Parsed spec.inout:
-// [
-//   {
-//     in: "Amor a Roma",
-//     out: "yes",
-//   },
-//   {
-//     in: "La casa es grande\nSalida a la casa",
-//     out: "yes\nno",
-//   },
-// ];
-
-// Results in readable format:
-// ┌─┬──────────────────┬──────────────────┬──────────────────┐
-// │#│Input             │Output            │Passed            │
-// ├─┼──────────────────┼──────────────────┼──────────────────┤
-// │1│Amor a Roma       │yes               │YES               │
-// ├─┼──────────────────┼──────────────────┼──────────────────┤
-// │2│Amor a Roma       │yes               │YES               │
-// │ │Salida a la casa  │no                │                  │
-// └─┴──────────────────┴──────────────────┴──────────────────┘
-// See: https://www.npmjs.com/package/le-table
+const SpecParser = require("./SpecParser");
+const Validator = require("./Validator");
+const config = require("./config");
 
 const path = require("path");
 
 const shell = require("shelljs");
 const LeTable = require("le-table");
 
-const SpecParser = require("./SpecParser");
+function TestRunner() {}
+
+TestRunner.prototype.run = function (targetDirectory) {
+  Validator.performAllValidations(targetDirectory);
+
+  const parsedSpec = new SpecParser().parseSpec(
+    path.join(targetDirectory, config.requiredFiles.testCases)
+  );
+  const testResults = testSolution(parsedSpec, targetDirectory);
+
+  const exerciseHeading = getExerciseHeading(targetDirectory);
+  const summaryResults = generateSummaryResults(testResults);
+  const fullResults = generateAsciiTableOutput(parsedSpec, testResults);
+
+  console.log(exerciseHeading); // Print exercise heading
+  console.log(summaryResults); // Print results summary
+  console.log(fullResults); // Print full results
+
+  process.exit(determineExitCode(testResults));
+};
 
 function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
   const testResults = [];
@@ -49,7 +48,7 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
     // Show compilation or interpretation errors
     if (result.stderr !== "") {
       console.error(result.stderr);
-      process.exit(1);
+      process.exit(config.setAtRuntime.enableErrorExitCode ? 1 : 0);
     }
 
     let actualOutput = result.stdout.replace(/\r/g, "");
@@ -66,8 +65,8 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
   return testResults;
 }
 
-function determineExitCode(testResults, errorOnTestFail) {
-  if (errorOnTestFail) {
+function determineExitCode(testResults) {
+  if (config.setAtRuntime.enableErrorExitCode) {
     return testResults.find((result) => result === false) === false ? 1 : 0;
   }
   return 0;
@@ -105,20 +104,4 @@ function getExerciseHeading(targetDirectory) {
   return `Exercise: ${path.basename(path.resolve(targetDirectory))}`;
 }
 
-function run({ targetDirectory, errorOnTestFail }) {
-  const parsedSpec = SpecParser.parseSpec(
-    path.join(targetDirectory, "spec.inout")
-  );
-  const testResults = testSolution(parsedSpec, targetDirectory);
-  const exerciseHeading = getExerciseHeading(targetDirectory);
-  const summaryResulsts = generateSummaryResults(testResults);
-  const fullResults = generateAsciiTableOutput(parsedSpec, testResults);
-
-  console.log(exerciseHeading); // Print exercise heading
-  console.log(summaryResulsts); // Print results summary
-  console.log(fullResults); // Print full results
-
-  process.exit(determineExitCode(testResults, errorOnTestFail));
-}
-
-module.exports = { run };
+module.exports = TestRunner;

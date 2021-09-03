@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const TestRunner = require("./index");
+const config = require("./config");
 
 // Parse command line arguments
 const argv = require("yargs")(process.argv.slice(2))
@@ -9,13 +10,16 @@ const argv = require("yargs")(process.argv.slice(2))
     command
       .positional("dir", {
         description: `Compliant coding exercise directory (i.e. has two files: a
-          Solution.{java|py|c|cpp} and a spec.inout)`,
+          ${config.requiredFiles.solutionFileName}.{${config.supportedLanguages}} and a ${config.requiredFiles.testCases})`,
         type: "string",
         default: ".",
       })
       .option("e", {
-        alias: "error-on-test-fail",
-        description: "Finish with exit code 1 when a test case fails.",
+        alias: "enable-error-exit-code",
+        description: `Finish with exit code 1 when a test case fails,
+          a compilation or interpretation error happens,
+          or a validation fails. When this option is not
+          set, always finish with 0.`,
         type: "boolean",
         default: false,
       });
@@ -24,7 +28,6 @@ const argv = require("yargs")(process.argv.slice(2))
   .wrap(80)
   .locale("en").argv;
 
-TestRunner.run({
-  targetDirectory: argv.dir,
-  errorOnTestFail: argv.errorOnTestFail,
-});
+config.setAtRuntime.enableErrorExitCode = argv.enableErrorExitCode;
+
+new TestRunner().run(argv.dir);

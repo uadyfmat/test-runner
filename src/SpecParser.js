@@ -61,8 +61,11 @@ const fs = require("fs");
 const IN_BLOCK_DELIMITER = "//";
 const OUT_BLOCK_DELIMITER = "$$";
 
-// TODO: Validate spec.inout has correct format
-function parseSpec(specFilePath) {
+function SpecParser() {}
+
+// TODO: Validate spec.inout has correct format.
+// This function takes for granted that the format is valid.
+SpecParser.prototype.parseSpec = function (specFilePath) {
   const lines = fs
     .readFileSync(specFilePath, { encoding: "utf8" })
     .toString()
@@ -118,7 +121,7 @@ function parseSpec(specFilePath) {
   parsedSpec.push(Object.assign({}, currentInOutObject));
 
   return parsedSpec;
-}
+};
 
 function onBlockDelimiterFound({
   blockDelimiter,
@@ -182,4 +185,4 @@ function getOpenedBlockType(blocksDelimsOpened) {
   return undefined;
 }
 
-module.exports = { parseSpec };
+module.exports = SpecParser;

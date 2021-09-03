@@ -2,13 +2,25 @@
 
 Test Runner (`test-runner`) is a command-line tool to test a code file against stdin/stdout test cases written in a single, easy to read and write test cases file (`spec.inout`).
 
-## CLI abbreviated API
+## Installation and usage
+
+Install using the following command:
+
+```txt
+npm i -g uadyfmat/test-runner
+```
+
+The general API of the CLI is the following:
 
 ```txt
 Usage: test-runner [options] [dir]
 ```
 
 Use `--help` to get a more thorough help message.
+
+`[dir]` expects a [valid coding exercise project structure](#coding-exercise-project-structure).
+
+**Notice that you must separately install the language-specific compiler or interpreter for your language of choice.** For instance, when working with Java, make sure that the commands `javac` and `java` are available in the terminal.
 
 ## Coding exercise project structure
 
@@ -49,7 +61,7 @@ Currently: Java, Python, C and C++.
 Supporting a new language requires the following changes:
 
 - Update [run](./src/run) to add the required commands.
-- Update [cli.js](./src/cli.js) to mention the new supported language in the help message of the CLI.
+- Update [config.js](./src/config.js) to add the new supported language extension.
 
 ## Development
 
@@ -58,6 +70,24 @@ Supporting a new language requires the following changes:
 - Node.js
 
 When using Windows, use GitBash, not CMD.
+
+### Code guidelines
+
+Two types of JavaScript files are used:
+
+1. 'Class-like', where each file defines a constructor function and methods attached to the constructed object. This is similar to Java's idea of 1 class per file. Here, the constructor function is the first line after imports, then prototype attachments follow, then private functions and finally the export of the constructor.
+2. 'Free-form', where the file has a config object, does some imports, or performs or is something else which would not benefit from a constructor function.
+
+Naming conventions:
+
+- JS file type #1: Use `PascalCase` for the file name, equal to the name of the constructor function.
+- JS file type #2: Use `camelCase` for the file name, whatever makes sense.
+
+Order of imports:
+
+1. Local imports
+2. Node.js imports
+3. Third-party imports
 
 ### Sample `Solution` and `spec.inout` files
 
