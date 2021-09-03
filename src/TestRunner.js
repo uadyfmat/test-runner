@@ -1,31 +1,7 @@
 // Steps:
 // - Parse spec.inout.
 // - Test Solution.{ext} against every entry in spec.inout.
-//   this uses run to execute the solution file.
 // - Print the testing results into readable format.
-
-// Parsed spec.inout:
-// [
-//   {
-//     in: "Amor a Roma",
-//     out: "yes",
-//   },
-//   {
-//     in: "La casa es grande\nSalida a la casa",
-//     out: "yes\nno",
-//   },
-// ];
-
-// Results in readable format:
-// ┌─┬──────────────────┬──────────────────┬──────────────────┐
-// │#│Input             │Output            │Passed            │
-// ├─┼──────────────────┼──────────────────┼──────────────────┤
-// │1│Amor a Roma       │yes               │YES               │
-// ├─┼──────────────────┼──────────────────┼──────────────────┤
-// │2│Amor a Roma       │yes               │YES               │
-// │ │Salida a la casa  │no                │                  │
-// └─┴──────────────────┴──────────────────┴──────────────────┘
-// See: https://www.npmjs.com/package/le-table
 
 const SpecParser = require("./SpecParser");
 const Validator = require("./Validator");

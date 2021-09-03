@@ -63,7 +63,8 @@ const OUT_BLOCK_DELIMITER = "$$";
 
 function SpecParser() {}
 
-// TODO: Validate spec.inout has correct format
+// TODO: Validate spec.inout has correct format.
+// This function takes for granted that the format is valid.
 SpecParser.prototype.parseSpec = function (specFilePath) {
   const lines = fs
     .readFileSync(specFilePath, { encoding: "utf8" })
