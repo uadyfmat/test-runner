@@ -27,14 +27,14 @@
 // └─┴──────────────────┴──────────────────┴──────────────────┘
 // See: https://www.npmjs.com/package/le-table
 
+const path = require("path");
+
 const shell = require("shelljs");
 const LeTable = require("le-table");
 
 const SpecParser = require("./SpecParser");
 
-const SPEC_FILE_PATH = "./src/spec.inout";
-
-function testSolution(parsedSpec, ignoreEndingNewLine = true) {
+function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
   const testResults = [];
 
   for (let testCase of parsedSpec) {
@@ -42,7 +42,7 @@ function testSolution(parsedSpec, ignoreEndingNewLine = true) {
       .exec(`printf '${testCase.in.replace(/\n/g, "\\n")}'`, {
         silent: true,
       })
-      .exec("bash ./run", {
+      .exec(`bash ${__dirname}/run ${targetDirectory}`, {
         silent: true,
       });
 
@@ -66,8 +66,11 @@ function testSolution(parsedSpec, ignoreEndingNewLine = true) {
   return testResults;
 }
 
-function determineExitCode(testResults) {
-  return testResults.find((result) => result === false) === false ? 1 : 0;
+function determineExitCode(testResults, errorOnTestFail) {
+  if (errorOnTestFail) {
+    return testResults.find((result) => result === false) === false ? 1 : 0;
+  }
+  return 0;
 }
 
 function generateAsciiTableOutput(parsedSpec, testResults) {
@@ -91,14 +94,31 @@ function generateAsciiTableOutput(parsedSpec, testResults) {
   return table.stringify();
 }
 
-function main() {
-  const parsedSpec = SpecParser.parseSpec(SPEC_FILE_PATH);
-  const testResults = testSolution(parsedSpec);
-  const printableResults = generateAsciiTableOutput(parsedSpec, testResults);
+function generateSummaryResults(testResults) {
+  const testsRun = testResults.length;
+  const failures = testResults.filter((result) => result === false).length;
 
-  console.log(printableResults); // Print results in readable form.
-
-  process.exit(determineExitCode(testResults));
+  return `Tests run: ${testsRun}, Failures: ${failures}`;
 }
 
-main();
+function getExerciseHeading(targetDirectory) {
+  return `Exercise: ${path.basename(path.resolve(targetDirectory))}`;
+}
+
+function run({ targetDirectory, errorOnTestFail }) {
+  const parsedSpec = SpecParser.parseSpec(
+    path.join(targetDirectory, "spec.inout")
+  );
+  const testResults = testSolution(parsedSpec, targetDirectory);
+  const exerciseHeading = getExerciseHeading(targetDirectory);
+  const summaryResulsts = generateSummaryResults(testResults);
+  const fullResults = generateAsciiTableOutput(parsedSpec, testResults);
+
+  console.log(exerciseHeading); // Print exercise heading
+  console.log(summaryResulsts); // Print results summary
+  console.log(fullResults); // Print full results
+
+  process.exit(determineExitCode(testResults, errorOnTestFail));
+}
+
+module.exports = { run };
