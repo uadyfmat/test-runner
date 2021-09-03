@@ -71,6 +71,24 @@ Supporting a new language requires the following changes:
 
 When using Windows, use GitBash, not CMD.
 
+### Code guidelines
+
+Two types of JavaScript files are used:
+
+1. 'Class-like', where each file defines a constructor function and methods attached to the constructed object. This is similar to Java's idea of 1 class per file. Here, the constructor function is the first line after imports, then prototype attachments follow, then private functions and finally the export of the constructor.
+2. 'Free-form', where the file has a config object, does some imports, or performs or is something else which would not benefit from a constructor function.
+
+Naming conventions:
+
+- JS file type #1: Use `PascalCase` for the file name, equal to the name of the constructor function.
+- JS file type #2: Use `camelCase` for the file name, whatever makes sense.
+
+Order of imports:
+
+1. Local imports
+2. Node.js imports
+3. Third-party imports
+
 ### Sample `Solution` and `spec.inout` files
 
 ### `Solution.java`
