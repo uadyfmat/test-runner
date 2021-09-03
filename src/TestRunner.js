@@ -27,14 +27,21 @@
 // └─┴──────────────────┴──────────────────┴──────────────────┘
 // See: https://www.npmjs.com/package/le-table
 
+const SpecParser = require("./SpecParser");
+const Validator = require("./Validator");
+const config = require("./config");
+
 const path = require("path");
 
 const shell = require("shelljs");
 const LeTable = require("le-table");
 
-const SpecParser = require("./SpecParser");
-
-function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
+function testSolution(
+  parsedSpec,
+  targetDirectory,
+  enableErrorExitCode,
+  ignoreEndingNewLine = true
+) {
   const testResults = [];
 
   for (let testCase of parsedSpec) {
@@ -49,7 +56,7 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
     // Show compilation or interpretation errors
     if (result.stderr !== "") {
       console.error(result.stderr);
-      process.exit(1);
+      process.exit(enableErrorExitCode ? 1 : 0);
     }
 
     let actualOutput = result.stdout.replace(/\r/g, "");
@@ -66,8 +73,8 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
   return testResults;
 }
 
-function determineExitCode(testResults, errorOnTestFail) {
-  if (errorOnTestFail) {
+function determineExitCode(testResults, enableErrorExitCode) {
+  if (enableErrorExitCode) {
     return testResults.find((result) => result === false) === false ? 1 : 0;
   }
   return 0;
@@ -105,20 +112,27 @@ function getExerciseHeading(targetDirectory) {
   return `Exercise: ${path.basename(path.resolve(targetDirectory))}`;
 }
 
-function run({ targetDirectory, errorOnTestFail }) {
+function run({ targetDirectory, enableErrorExitCode }) {
+  Validator.performAllValidations(targetDirectory, enableErrorExitCode);
+
   const parsedSpec = SpecParser.parseSpec(
-    path.join(targetDirectory, "spec.inout")
+    path.join(targetDirectory, config.requiredFiles.testCases)
   );
-  const testResults = testSolution(parsedSpec, targetDirectory);
+  const testResults = testSolution(
+    parsedSpec,
+    targetDirectory,
+    enableErrorExitCode
+  );
+
   const exerciseHeading = getExerciseHeading(targetDirectory);
-  const summaryResulsts = generateSummaryResults(testResults);
+  const summaryResults = generateSummaryResults(testResults);
   const fullResults = generateAsciiTableOutput(parsedSpec, testResults);
 
   console.log(exerciseHeading); // Print exercise heading
-  console.log(summaryResulsts); // Print results summary
+  console.log(summaryResults); // Print results summary
   console.log(fullResults); // Print full results
 
-  process.exit(determineExitCode(testResults, errorOnTestFail));
+  process.exit(determineExitCode(testResults, enableErrorExitCode));
 }
 
 module.exports = { run };

@@ -14,8 +14,11 @@ const argv = require("yargs")(process.argv.slice(2))
         default: ".",
       })
       .option("e", {
-        alias: "error-on-test-fail",
-        description: "Finish with exit code 1 when a test case fails.",
+        alias: "enable-error-exit-code",
+        description: `Finish with exit code 1 when a test case fails,
+          a compilation or interpretation error happens,
+          or a required file is missing. When this option
+          is not set, always finish with 0.`,
         type: "boolean",
         default: false,
       });
@@ -26,5 +29,5 @@ const argv = require("yargs")(process.argv.slice(2))
 
 TestRunner.run({
   targetDirectory: argv.dir,
-  errorOnTestFail: argv.errorOnTestFail,
+  enableErrorExitCode: argv.enableErrorExitCode,
 });
