@@ -61,7 +61,7 @@ Currently: Java, Python, C and C++.
 Supporting a new language requires the following changes:
 
 - Update [run](./src/run) to add the required commands.
-- Update [cli.js](./src/cli.js) to mention the new supported language in the help message of the CLI.
+- Update [config.js](./src/config.js) to add the new supported language extension.
 
 ## Development
 

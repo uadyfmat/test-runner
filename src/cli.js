@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 const TestRunner = require("./index");
+const config = require("./config");
 
 // Parse command line arguments
 const argv = require("yargs")(process.argv.slice(2))
@@ -9,7 +10,7 @@ const argv = require("yargs")(process.argv.slice(2))
     command
       .positional("dir", {
         description: `Compliant coding exercise directory (i.e. has two files: a
-          Solution.{java|py|c|cpp} and a spec.inout)`,
+          ${config.requiredFiles.solutionFileName}.{${config.supportedLanguages}} and a ${config.requiredFiles.testCases})`,
         type: "string",
         default: ".",
       })
