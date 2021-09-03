@@ -2,13 +2,25 @@
 
 Test Runner (`test-runner`) is a command-line tool to test a code file against stdin/stdout test cases written in a single, easy to read and write test cases file (`spec.inout`).
 
-## CLI abbreviated API
+## Installation and usage
+
+Install using the following command:
+
+```txt
+npm i -g uadyfmat/test-runner
+```
+
+The general API of the CLI is the following:
 
 ```txt
 Usage: test-runner [options] [dir]
 ```
 
 Use `--help` to get a more thorough help message.
+
+`[dir]` expects a [valid coding exercise project structure](#coding-exercise-project-structure).
+
+**Notice that you must separately install the language-specific compiler or interpreter for your language of choice.** For instance, when working with Java, make sure that the commands `javac` and `java` are available in the terminal.
 
 ## Coding exercise project structure
 
