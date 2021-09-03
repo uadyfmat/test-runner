@@ -1,5 +1,5 @@
 {
-  "name": "coding-exercise",
+  "name": "test-runner",
   "version": "1.0.0",
   "main": "src/index.js",
   "bin": "src/cli.js",

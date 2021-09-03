@@ -21,16 +21,16 @@ entry_file=$(ls $1 | grep ^${entry_file_name}[.].*$ | head -1)
 
 # Execute entry file with standard input
 case $entry_file in
-  *.c)
-    gcc $1/${entry_file} -o "$1/${entry_file_name}.out"
-    echo -e "${STDIN}" | "$1/${entry_file_name}.out"
-    ;;
   *.java)
     javac $1/${entry_file}
     echo -e "${STDIN}" | java -cp $1 ${entry_file_name}
     ;;
   *.py)
     echo -e "${STDIN}" | python $1/${entry_file}
+    ;;
+  *.c)
+    gcc $1/${entry_file} -o "$1/${entry_file_name}.out"
+    echo -e "${STDIN}" | "$1/${entry_file_name}.out"
     ;;
   *.cpp)
     g++ $1/${entry_file} -o "$1/${entry_file_name}.out"
