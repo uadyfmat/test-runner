@@ -18,8 +18,8 @@ const argv = require("yargs")(process.argv.slice(2))
         alias: "enable-error-exit-code",
         description: `Finish with exit code 1 when a test case fails,
           a compilation or interpretation error happens,
-          or a required file is missing. When this option
-          is not set, always finish with 0.`,
+          or a validation fails. When this option is not
+          set, always finish with 0.`,
         type: "boolean",
         default: false,
       });
