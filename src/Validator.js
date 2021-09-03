@@ -6,23 +6,20 @@ const path = require("path");
 
 function Validator() {}
 
-Validator.performAllValidations = function (
-  targetDirectory,
-  enableErrorExitCode
-) {
+Validator.performAllValidations = function (targetDirectory) {
   let errors = {};
 
   errors = validateTargetDirExists(targetDirectory);
-  printAndExitOnError(errors, enableErrorExitCode);
+  printAndExitOnError(errors);
 
   errors = validateTargetDirIsValid(targetDirectory);
-  printAndExitOnError(errors, enableErrorExitCode);
+  printAndExitOnError(errors);
 };
 
-function printAndExitOnError(errors, enableErrorExitCode) {
+function printAndExitOnError(errors) {
   if (errors.hasErrors()) {
     console.log(errors.toString());
-    process.exit(enableErrorExitCode ? 1 : 0);
+    process.exit(config.setAtRuntime.enableErrorExitCode ? 1 : 0);
   }
 }
 

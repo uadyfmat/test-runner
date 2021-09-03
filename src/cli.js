@@ -28,7 +28,6 @@ const argv = require("yargs")(process.argv.slice(2))
   .wrap(80)
   .locale("en").argv;
 
-new TestRunner().run({
-  targetDirectory: argv.dir,
-  enableErrorExitCode: argv.enableErrorExitCode,
-});
+config.setAtRuntime.enableErrorExitCode = argv.enableErrorExitCode;
+
+new TestRunner().run(argv.dir);

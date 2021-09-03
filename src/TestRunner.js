@@ -38,17 +38,13 @@ const LeTable = require("le-table");
 
 function TestRunner() {}
 
-TestRunner.prototype.run = function ({ targetDirectory, enableErrorExitCode }) {
-  Validator.performAllValidations(targetDirectory, enableErrorExitCode);
+TestRunner.prototype.run = function (targetDirectory) {
+  Validator.performAllValidations(targetDirectory);
 
   const parsedSpec = new SpecParser().parseSpec(
     path.join(targetDirectory, config.requiredFiles.testCases)
   );
-  const testResults = testSolution(
-    parsedSpec,
-    targetDirectory,
-    enableErrorExitCode
-  );
+  const testResults = testSolution(parsedSpec, targetDirectory);
 
   const exerciseHeading = getExerciseHeading(targetDirectory);
   const summaryResults = generateSummaryResults(testResults);
@@ -58,15 +54,10 @@ TestRunner.prototype.run = function ({ targetDirectory, enableErrorExitCode }) {
   console.log(summaryResults); // Print results summary
   console.log(fullResults); // Print full results
 
-  process.exit(determineExitCode(testResults, enableErrorExitCode));
+  process.exit(determineExitCode(testResults));
 };
 
-function testSolution(
-  parsedSpec,
-  targetDirectory,
-  enableErrorExitCode,
-  ignoreEndingNewLine = true
-) {
+function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
   const testResults = [];
 
   for (let testCase of parsedSpec) {
@@ -81,7 +72,7 @@ function testSolution(
     // Show compilation or interpretation errors
     if (result.stderr !== "") {
       console.error(result.stderr);
-      process.exit(enableErrorExitCode ? 1 : 0);
+      process.exit(config.setAtRuntime.enableErrorExitCode ? 1 : 0);
     }
 
     let actualOutput = result.stdout.replace(/\r/g, "");
@@ -98,8 +89,8 @@ function testSolution(
   return testResults;
 }
 
-function determineExitCode(testResults, enableErrorExitCode) {
-  if (enableErrorExitCode) {
+function determineExitCode(testResults) {
+  if (config.setAtRuntime.enableErrorExitCode) {
     return testResults.find((result) => result === false) === false ? 1 : 0;
   }
   return 0;
