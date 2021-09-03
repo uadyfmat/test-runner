@@ -36,6 +36,31 @@ const path = require("path");
 const shell = require("shelljs");
 const LeTable = require("le-table");
 
+function TestRunner() {}
+
+TestRunner.prototype.run = function ({ targetDirectory, enableErrorExitCode }) {
+  Validator.performAllValidations(targetDirectory, enableErrorExitCode);
+
+  const parsedSpec = new SpecParser().parseSpec(
+    path.join(targetDirectory, config.requiredFiles.testCases)
+  );
+  const testResults = testSolution(
+    parsedSpec,
+    targetDirectory,
+    enableErrorExitCode
+  );
+
+  const exerciseHeading = getExerciseHeading(targetDirectory);
+  const summaryResults = generateSummaryResults(testResults);
+  const fullResults = generateAsciiTableOutput(parsedSpec, testResults);
+
+  console.log(exerciseHeading); // Print exercise heading
+  console.log(summaryResults); // Print results summary
+  console.log(fullResults); // Print full results
+
+  process.exit(determineExitCode(testResults, enableErrorExitCode));
+};
+
 function testSolution(
   parsedSpec,
   targetDirectory,
@@ -112,27 +137,4 @@ function getExerciseHeading(targetDirectory) {
   return `Exercise: ${path.basename(path.resolve(targetDirectory))}`;
 }
 
-function run({ targetDirectory, enableErrorExitCode }) {
-  Validator.performAllValidations(targetDirectory, enableErrorExitCode);
-
-  const parsedSpec = SpecParser.parseSpec(
-    path.join(targetDirectory, config.requiredFiles.testCases)
-  );
-  const testResults = testSolution(
-    parsedSpec,
-    targetDirectory,
-    enableErrorExitCode
-  );
-
-  const exerciseHeading = getExerciseHeading(targetDirectory);
-  const summaryResults = generateSummaryResults(testResults);
-  const fullResults = generateAsciiTableOutput(parsedSpec, testResults);
-
-  console.log(exerciseHeading); // Print exercise heading
-  console.log(summaryResults); // Print results summary
-  console.log(fullResults); // Print full results
-
-  process.exit(determineExitCode(testResults, enableErrorExitCode));
-}
-
-module.exports = { run };
+module.exports = TestRunner;
