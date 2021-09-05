@@ -69,7 +69,7 @@ SpecParser.prototype.parseSpec = function (specFilePath) {
   const lines = fs
     .readFileSync(specFilePath, { encoding: "utf8" })
     .toString()
-    .replace("/\r/g", "")
+    .replace(/\r/g, "")
     .split("\n");
 
   const parsedSpec = [];
