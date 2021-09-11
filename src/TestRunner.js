@@ -36,22 +36,41 @@ TestRunner.prototype.run = function (targetDirectory) {
 function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
   const testResults = [];
 
-  for (let testCase of parsedSpec) {
-    const result = shell
-      .exec(`printf '${testCase.in.replace(/\n/g, "\\n")}'`, {
-        silent: true,
-      })
-      .exec(`bash ${__dirname}/run ${targetDirectory}`, {
-        silent: true,
-      });
+  // Find solution file
+  const solutionFile = shell.exec(
+    `bash '${__dirname}/shell/find-entry' '${targetDirectory}' "${config.supportedLanguages.join(
+      "|"
+    )}"`,
+    { silent: true }
+  ).stdout;
 
-    // Show compilation or interpretation errors
-    if (result.stderr !== "") {
-      console.error(result.stderr);
+  // Compile (if necessary) the solution file
+  const compilationResult = shell.exec(
+    `bash '${__dirname}/shell/compile' '${targetDirectory}' ${solutionFile}`
+  );
+
+  // Show compilation errors
+  if (compilationResult.stderr !== "") {
+    console.error(compilationResult.stderr);
+    process.exit(config.setAtRuntime.enableErrorExitCode ? 1 : 0);
+  }
+
+  for (let testCase of parsedSpec) {
+    // Run the solution file
+    const runtimeResult = shell
+      .exec(`printf '${testCase.in.replace(/\n/g, "\\n")}'`, { silent: true })
+      .exec(
+        `bash '${__dirname}/shell/run' '${targetDirectory}' ${solutionFile}`,
+        { silent: true }
+      );
+
+    // Show runtime errors
+    if (runtimeResult.stderr !== "") {
+      console.error(runtimeResult.stderr);
       process.exit(config.setAtRuntime.enableErrorExitCode ? 1 : 0);
     }
 
-    let actualOutput = result.stdout.replace(/\r/g, "");
+    let actualOutput = runtimeResult.stdout.replace(/\r/g, "");
     let expectedOutput = testCase.out;
 
     if (ignoreEndingNewLine) {
@@ -61,6 +80,9 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
 
     testResults.push(actualOutput === expectedOutput);
   }
+
+  // Clean compilation files, if any
+  shell.exec(`bash '${__dirname}/shell/clean' '${targetDirectory}'`);
 
   return testResults;
 }

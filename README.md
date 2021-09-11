@@ -58,10 +58,13 @@ The file `spec.inout` can contain as many of these `//in//$$out$$` pairs as requ
 
 Currently: Java, Python, C and C++.
 
-Supporting a new language requires the following changes:
+Supporting a new **compiled** language requires the following changes:
 
-- Update [run](./src/run) to add the required commands.
-- Update [config.js](./src/config.js) to add the new supported language extension.
+- Update [compile](./src/shell/compile) and [run](./src/shell/run) to add the required commands.
+- Update [clean](./src/shell/clean) to remove the new compilation output.
+- Update [config.js](./src/config.js) to add the new supported source language extension.
+
+If the language is **interpreted**, it is only required to update [run](./src/shell/run) and [config.js](./src/config.js).
 
 ## Development
 
