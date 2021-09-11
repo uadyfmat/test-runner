@@ -56,7 +56,7 @@ The file `spec.inout` can contain as many of these `//in//$$out$$` pairs as requ
 
 ## Supported languages
 
-Currently: Java, Python, C and C++.
+Can be found by running: `test-runner --help`.
 
 Supporting a new **compiled** language requires the following changes:
 
