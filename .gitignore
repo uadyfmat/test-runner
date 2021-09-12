@@ -1,6 +1,7 @@
 # Dependencies
 node_modules/
 
-# Test files
-Solution.*
-spec.inout
+# Debugging
+/Solution.*
+/debugging/palindromes/Solution.*
+/spec.inout
