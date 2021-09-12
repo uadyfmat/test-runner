@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# Description:
+# Compile a provided Solution file.
+#
+# Parameters:
+# $1: Directory where file-to-run lives.
+# $2: Solution file name with extension (e.g. Solution.java).
+#
+# Example invocation:
+# ./src/compile . Solution.java
+# Or using find-entry:
+# ./src/shell/compile . $(./src/find-entry . 'java|c|cpp|py')
+
+entry_file=$2
+entry_file_name=$(echo $2 | cut -d'.' -f1)
+
+# Execute entry file with standard input
+case $entry_file in
+  *.java) #.class
+    javac $1/${entry_file}
+    ;;
+  *.c)    # .out
+    gcc $1/${entry_file} -o "$1/${entry_file_name}.out"
+    ;;
+  *.cpp)  # .out
+    g++ $1/${entry_file} -o "$1/${entry_file_name}.out"
+esac

@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Description:
+# Find a single Solution.* file in the provided directory, from a supported
+# set of languages. The actual output is a Solution file name with extension
+# (e.g. Solution.java).
+#
+# Parameters:
+# $1: Directory where file-to-run lives, e.g.: .
+# $2: Supported langs, e.g. 'java|py|c|cpp'
+#
+# Example invocation:
+# ./src/shell/find-entry . 'java|py|c|cpp'
+
+# Expected file name
+entry_file_name=Solution
+
+# Find first file which matches expected entry
+entry_file=$(ls $1 | grep -P "^${entry_file_name}[.]($2)$" | head -1)
+
+echo $entry_file

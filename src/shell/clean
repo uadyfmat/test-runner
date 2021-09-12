@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Description:
+# Delete build files, if any.
+#
+# Parameters:
+# $1: Directory where file-to-run lives.
+#
+# Example invocation:
+# ./src/shell/clean .
+
+rm $1/*.class 2> /dev/null  # Java
+rm $1/*.out 2> /dev/null    # C, C++

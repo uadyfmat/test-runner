@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# Description:
+# Run a provided Solution file. When the Solution file is from a compiled
+# language (e.g. C), it is assumed that a corresponding compilation file
+# already exists in the directory.
+#
+# Parameters:
+# $1: Directory where file-to-run lives.
+# $2: Solution file name with extension (e.g. Solution.java).
+#
+# Example invocations:
+# ./src/run . Solution.java
+# Or using find-entry:
+# ./src/shell/run . $(./src/find-entry . 'java|c|cpp|py')
+
+# Read standard input
+STDIN=$(cat -)
+
+entry_file_name=$(echo $2 | cut -d'.' -f1)
+
+# Execute entry file with standard input
+case $2 in
+
+  #######################
+  # Compiled languages
+  #######################
+  *.java)
+    echo -e "${STDIN}" | java -cp $1 ${entry_file_name}
+    ;;
+  *.c)
+    echo -e "${STDIN}" | "$1/${entry_file_name}.out"
+    ;;
+  *.cpp)
+    echo -e "${STDIN}" | "$1/${entry_file_name}.out"
+    ;;
+
+  #######################
+  # Interpreted languages
+  #######################
+  *.py)
+    echo -e "${STDIN}" | python $1/$2
+    ;;
+esac
