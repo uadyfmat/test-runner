@@ -46,7 +46,8 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
 
   // Compile (if necessary) the solution file
   const compilationResult = shell.exec(
-    `bash '${__dirname}/shell/compile' '${targetDirectory}' ${solutionFile}`
+    `bash '${__dirname}/shell/compile' '${targetDirectory}' ${solutionFile}`,
+    { silent: true }
   );
 
   // Show compilation errors
@@ -82,7 +83,9 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
   }
 
   // Clean compilation files, if any
-  shell.exec(`bash '${__dirname}/shell/clean' '${targetDirectory}'`);
+  shell.exec(`bash '${__dirname}/shell/clean' '${targetDirectory}'`, {
+    silent: true,
+  });
 
   return testResults;
 }
