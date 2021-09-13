@@ -3,5 +3,4 @@ node_modules/
 
 # Debugging
 /Solution.*
-/debugging/palindromes/Solution.*
 /spec.inout

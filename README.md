@@ -94,62 +94,8 @@ Order of imports:
 
 ### Sample `Solution` and `spec.inout` files
 
-### `Solution.java`
+The folder [debugging](./debugging) contains a sample exercise, palindromes, with its `spec.inout` and `Solution` files. For debugging, run test-runner against a specific solution, e.g.:
 
-```java
-import java.util.Scanner;
-
-public class Solution {
-
-  public static void main(String[] args) {
-    Scanner scanner = new Scanner(System.in);
-
-    while (scanner.hasNextLine()) {
-      String line = scanner.nextLine();
-      System.out.println(isPalindrome(line));
-    }
-
-    scanner.close();
-  }
-
-  public static String isPalindrome(String phrase) {
-    String originalNoSpaces = phrase.replaceAll("\\s", "");
-    String reversedNoSpaces = new StringBuilder(phrase)
-        .reverse().toString().replaceAll("\\s", "");
-
-    return originalNoSpaces.equalsIgnoreCase(reversedNoSpaces)
-        ? "yes" : "no";
-  }
-}
-```
-
-### `spec.inout`
-
-```txt
-//
-Amor a Roma
-//
-$$
-yes
-$$
-
-//
-Amor a Roma
-Salida a la casa
-Anita lava la tina
-//
-$$
-yes
-no
-yes
-$$
-
-//
-7887
-123
-//
-$$
-yes
-no
-$$
+```bash
+./src/cli.js --language py debugging/palindromes
 ```

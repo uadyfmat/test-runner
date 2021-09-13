@@ -22,6 +22,15 @@ const argv = require("yargs")(process.argv.slice(2))
           set, always finish with 0.`,
         type: "boolean",
         default: false,
+      })
+      .option("l", {
+        alias: "language",
+        description: `Indicate language of the solution file. Useful
+        to pick a file when solution files of various
+        languages are present in the target directory.
+        Values: ${config.supportedLanguages.join(", ")}
+        Example: test-runner -l py .`,
+        type: "string",
       });
   })
   .help()
@@ -29,5 +38,6 @@ const argv = require("yargs")(process.argv.slice(2))
   .locale("en").argv;
 
 config.setAtRuntime.enableErrorExitCode = argv.enableErrorExitCode;
+config.setAtRuntime.targetLanguage = argv.language;
 
 new TestRunner().run(argv.dir);
