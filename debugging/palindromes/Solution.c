@@ -1,0 +1,101 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include <stdlib.h>
+
+char *toLowercase(char phrase[])
+{
+  int phraseLength = strlen(phrase);
+  char *lowercasePhrase = malloc(sizeof(char) * (phraseLength + 1));
+
+  for (int i = 0; i < phraseLength; i++)
+  {
+    lowercasePhrase[i] = tolower(phrase[i]);
+  }
+
+  lowercasePhrase[phraseLength] = '\0';
+
+  return lowercasePhrase;
+}
+
+char *removeWhitespace(char phrase[])
+{
+  int phraseLength = strlen(phrase);
+  char *noWhitespacePhrase = malloc(sizeof(char) * (phraseLength + 1));
+  int noWhitespacePhraseIndex = 0;
+
+  for (int i = 0; i < phraseLength; i++)
+  {
+    if (phrase[i] != ' ')
+    {
+      noWhitespacePhrase[noWhitespacePhraseIndex++] = phrase[i];
+    }
+  }
+
+  noWhitespacePhrase[noWhitespacePhraseIndex] = '\0';
+
+  return noWhitespacePhrase;
+}
+
+char *isPalindrome(char phrase[])
+{
+  char *isPalindrome = malloc(sizeof(char) * 3);
+
+  char *originalLowercaseNoSpaces = removeWhitespace(toLowercase(phrase));
+  char *reversedOriginalLowercaseNoSpaces = malloc(sizeof(char) * strlen(originalLowercaseNoSpaces));
+
+  strcpy(reversedOriginalLowercaseNoSpaces, originalLowercaseNoSpaces);
+  strrev(reversedOriginalLowercaseNoSpaces);
+
+  int comparison = strcmp(originalLowercaseNoSpaces, reversedOriginalLowercaseNoSpaces);
+
+  if (comparison == 0)
+  {
+    strcpy(isPalindrome, "yes");
+  }
+  else
+  {
+    strcpy(isPalindrome, "no");
+  }
+
+  free(originalLowercaseNoSpaces);
+  free(reversedOriginalLowercaseNoSpaces);
+
+  return isPalindrome;
+}
+
+int main(void)
+{
+  // char *result0 = toLowercase("HELLO");
+  // printf("%s\n", result0);
+
+  // char *result1 = removeWhitespace("HE LL O");
+  // printf("%s\n", result1);
+
+  // free(result0);
+  // free(result1);
+
+  char *isIt = isPalindrome("Anita lava la tina");
+  printf("%s\n", isIt);
+
+  isIt = isPalindrome("La casa grande");
+  printf("%s\n", isIt);
+
+  isIt = isPalindrome("Amor a Roma");
+  printf("%s\n", isIt);
+
+  free(isIt);
+
+  int numberOfTestCases;
+  scanf("%d", &numberOfTestCases);
+  getline();
+
+  printf("%d", numberOfTestCases);
+
+  char *line = getline();
+  printf("%s\n", line);
+
+  free(line);
+
+  return 0;
+}
