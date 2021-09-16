@@ -64,24 +64,30 @@ char *isPalindrome(char phrase[])
   return isPalindrome;
 }
 
-void readLineStdin(char *line, int maxSize)
+char *readLineStdin(int maxSize)
 {
+  char *line = malloc(maxSize);
   fgets(line, maxSize, stdin);
 
   // Remove ending new line, if any
   if ((strlen(line) > 0) && (line[strlen(line) - 1] == '\n'))
     line[strlen(line) - 1] = '\0';
+
+  return line;
 }
 
-void readIntStdin(int *number)
+int readIntStdin()
 {
-  int bytesForLine = 256;
+  int number;
+  int bytesForLine = 32;
 
   char *line = malloc(bytesForLine);
   fgets(line, bytesForLine, stdin);
-  sscanf(line, "%d", number);
+  sscanf(line, "%d", &number);
 
   free(line);
+
+  return number;
 }
 
 int main(void)
@@ -120,22 +126,19 @@ int main(void)
 
   // free(readLine);
 
-  int numberOfTestcases;
-  char *line = malloc(256);
+  int numberOfTestCases = readIntStdin();
 
-  readIntStdin(&numberOfTestcases);
+  printf("%d\n", numberOfTestCases);
 
-  printf("%d\n", numberOfTestcases);
+  char *line;
 
-  readLineStdin(line, 50);
+  line = readLineStdin(256);
 
-  printf("Hello %s. Nice to meet you.\n", line);
+  printf("%s\n", line);
 
-  readLineStdin(line, 50);
+  line = readLineStdin(256);
 
-  printf("Hello %s. Nice to meet you.\n", line);
-
-  free(line);
+  printf("%s\n", line);
 
   return 0;
 }
