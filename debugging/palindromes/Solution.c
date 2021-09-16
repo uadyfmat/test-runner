@@ -64,6 +64,8 @@ char *isPalindrome(char phrase[])
   return isPalindrome;
 }
 
+// Code for this function taken from:
+// https://stackoverflow.com/a/1248017/12591546
 char *readLineStdin(int maxSize)
 {
   char *line = malloc(maxSize);
@@ -92,53 +94,16 @@ int readIntStdin()
 
 int main(void)
 {
-  // char *result0 = toLowercase("HELLO");
-  // printf("%s\n", result0);
-
-  // char *result1 = removeWhitespace("HE LL O");
-  // printf("%s\n", result1);
-
-  // free(result0);
-  // free(result1);
-
-  // char *isIt = isPalindrome("Anita lava la tina");
-  // printf("%s\n", isIt);
-
-  // isIt = isPalindrome("La casa grande");
-  // printf("%s\n", isIt);
-
-  // isIt = isPalindrome("Amor a Roma");
-  // printf("%s\n", isIt);
-
-  // free(isIt);
-
-  // int numberOfTestCases;
-  // scanf("%d", &numberOfTestCases);
-
-  // printf("%d\n", numberOfTestCases);
-
-  // READ WITH gets()
-  // char line[100];
-  // char *readLine;
-
-  // readLine = gets(line);
-  // printf("%s\n", readLine);
-
-  // free(readLine);
-
   int numberOfTestCases = readIntStdin();
 
-  printf("%d\n", numberOfTestCases);
+  char *result;
+  for (int i = 0; i < numberOfTestCases; i++)
+  {
+    result = isPalindrome(readLineStdin(256));
+    printf("%s\n", result);
+  }
 
-  char *line;
-
-  line = readLineStdin(256);
-
-  printf("%s\n", line);
-
-  line = readLineStdin(256);
-
-  printf("%s\n", line);
+  free(result);
 
   return 0;
 }
