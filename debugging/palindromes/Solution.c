@@ -64,6 +64,26 @@ char *isPalindrome(char phrase[])
   return isPalindrome;
 }
 
+void readLineStdin(char *line, int maxSize)
+{
+  fgets(line, maxSize, stdin);
+
+  // Remove ending new line, if any
+  if ((strlen(line) > 0) && (line[strlen(line) - 1] == '\n'))
+    line[strlen(line) - 1] = '\0';
+}
+
+void readIntStdin(int *number)
+{
+  int bytesForLine = 256;
+
+  char *line = malloc(bytesForLine);
+  fgets(line, bytesForLine, stdin);
+  sscanf(line, "%d", number);
+
+  free(line);
+}
+
 int main(void)
 {
   // char *result0 = toLowercase("HELLO");
@@ -75,25 +95,45 @@ int main(void)
   // free(result0);
   // free(result1);
 
-  char *isIt = isPalindrome("Anita lava la tina");
-  printf("%s\n", isIt);
+  // char *isIt = isPalindrome("Anita lava la tina");
+  // printf("%s\n", isIt);
 
-  isIt = isPalindrome("La casa grande");
-  printf("%s\n", isIt);
+  // isIt = isPalindrome("La casa grande");
+  // printf("%s\n", isIt);
 
-  isIt = isPalindrome("Amor a Roma");
-  printf("%s\n", isIt);
+  // isIt = isPalindrome("Amor a Roma");
+  // printf("%s\n", isIt);
 
-  free(isIt);
+  // free(isIt);
 
-  int numberOfTestCases;
-  scanf("%d", &numberOfTestCases);
-  getline();
+  // int numberOfTestCases;
+  // scanf("%d", &numberOfTestCases);
 
-  printf("%d", numberOfTestCases);
+  // printf("%d\n", numberOfTestCases);
 
-  char *line = getline();
-  printf("%s\n", line);
+  // READ WITH gets()
+  // char line[100];
+  // char *readLine;
+
+  // readLine = gets(line);
+  // printf("%s\n", readLine);
+
+  // free(readLine);
+
+  int numberOfTestcases;
+  char *line = malloc(256);
+
+  readIntStdin(&numberOfTestcases);
+
+  printf("%d\n", numberOfTestcases);
+
+  readLineStdin(line, 50);
+
+  printf("Hello %s. Nice to meet you.\n", line);
+
+  readLineStdin(line, 50);
+
+  printf("Hello %s. Nice to meet you.\n", line);
 
   free(line);
 
