@@ -1,5 +1,6 @@
 const ErrorMessages = require("./ErrorMessages");
 const config = require("./config");
+const { getExerciseHeading } = require("./util");
 
 const fs = require("fs");
 const path = require("path");
@@ -25,7 +26,7 @@ Validator.performAllValidations = function (targetDirectory) {
 
 function printAndExitOnError(errors) {
   if (errors.hasErrors()) {
-    console.error(`Exercise: ${config.setAtRuntime.exerciseName}`);
+    console.error(getExerciseHeading());
     console.error("Errors attempting to run the exercise:");
     console.error(errors.toString());
     process.exit(config.setAtRuntime.enableErrorExitCode ? 1 : 0);
