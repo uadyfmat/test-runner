@@ -6,6 +6,7 @@
 const SpecParser = require("./SpecParser");
 const Validator = require("./Validator");
 const config = require("./config");
+const { getExerciseHeading } = require("./util");
 
 const path = require("path");
 
@@ -22,11 +23,10 @@ TestRunner.prototype.run = function (targetDirectory) {
   );
   const testResults = testSolution(parsedSpec, targetDirectory);
 
-  const exerciseHeading = getExerciseHeading(targetDirectory);
   const summaryResults = generateSummaryResults(testResults);
   const fullResults = generateAsciiTableOutput(parsedSpec, testResults);
 
-  console.log(exerciseHeading); // Print exercise heading
+  console.log(getExerciseHeading()); // Print exercise heading
   console.log(summaryResults); // Print results summary
   console.log(fullResults); // Print full results
 
@@ -54,6 +54,7 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
 
   // Show compilation errors
   if (compilationResult.stderr !== "") {
+    console.error(getExerciseHeading());
     console.error(compilationResult.stderr);
     process.exit(config.setAtRuntime.enableErrorExitCode ? 1 : 0);
   }
@@ -69,6 +70,7 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
 
     // Show runtime errors
     if (runtimeResult.stderr !== "") {
+      console.error(getExerciseHeading());
       console.error(runtimeResult.stderr);
       process.exit(config.setAtRuntime.enableErrorExitCode ? 1 : 0);
     }
@@ -125,10 +127,6 @@ function generateSummaryResults(testResults) {
   const failures = testResults.filter((result) => result === false).length;
 
   return `Tests run: ${testsRun}, Failures: ${failures}`;
-}
-
-function getExerciseHeading(targetDirectory) {
-  return `Exercise: ${path.basename(path.resolve(targetDirectory))}`;
 }
 
 module.exports = TestRunner;
