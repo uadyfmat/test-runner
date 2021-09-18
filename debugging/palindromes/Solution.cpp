@@ -44,6 +44,16 @@ string isPalindrome(string phrase)
 
 int main()
 {
-  cout << isPalindrome("Anita lava la tina");
+  int numberOfTestCases;
+  cin >> numberOfTestCases;
+  cin.get();
+
+  string line;
+  for (int i = 0; i < numberOfTestCases; i++)
+  {
+    getline(cin, line);
+    cout << isPalindrome(line) << "\n";
+  }
+
   return 0;
 }
