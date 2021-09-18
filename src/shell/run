@@ -10,9 +10,10 @@
 # $2: Solution file name with extension (e.g. Solution.java).
 #
 # Example invocations:
-# ./src/run . Solution.java
-# Or using find-entry:
-# ./src/shell/run . $(./src/find-entry . 'java|c|cpp|py')
+# ./src/shell/run . Solution.java
+
+# Base path of the script
+BASE_PATH=$(dirname "$0")
 
 # Read standard input
 STDIN=$(cat -)
@@ -26,6 +27,7 @@ case $2 in
   # Compiled languages
   #######################
   *.java)
+    "$BASE_PATH"/require-command java
     echo -e "${STDIN}" | java -cp $1 ${entry_file_name}
     ;;
   *.c)
@@ -39,6 +41,26 @@ case $2 in
   # Interpreted languages
   #######################
   *.py)
-    echo -e "${STDIN}" | python $1/$2
+    # Accept either 'python' or 'python3' command.
+    # This code could potentially be moved to a has-any-command script,
+    # which would receive a list of commands and return the first existent
+    # command, or a magic error value otherwise.
+
+    hasPython=$("$BASE_PATH"/has-command python)
+    hasPython3=$("$BASE_PATH"/has-command python3)
+    pythonCommand=""
+
+    if [ "$hasPython" = "true" ]; then
+      pythonCommand="python"
+    elif [ "$hasPython3" = "true" ]; then
+      pythonCommand="python3"
+    fi
+
+    if [ -z "$pythonCommand" ]; then
+      echo "Either 'python3' or 'python' command is required but neither was found." >&2
+      exit 1
+    fi
+
+    echo -e "${STDIN}" | $pythonCommand $1/$2
     ;;
 esac

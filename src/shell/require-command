@@ -1,0 +1,15 @@
+#!/bin/bash
+
+# Description:
+# Provided a command name, print an error message if the command
+# is not available and exit with 1. Else, just exit with 0.
+#
+# Parameters:
+# $1: Name of the command.
+#
+# Example invocation:
+# ./src/shell/require-command ghc
+
+command -v $1 > /dev/null 2>&1 || {
+  echo "Command '$1' is required but was not found." >&2; exit 1;
+}

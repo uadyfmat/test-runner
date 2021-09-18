@@ -8,9 +8,10 @@
 # $2: Solution file name with extension (e.g. Solution.java).
 #
 # Example invocation:
-# ./src/compile . Solution.java
-# Or using find-entry:
-# ./src/shell/compile . $(./src/find-entry . 'java|c|cpp|py')
+# ./src/shell/compile . Solution.java
+
+# Base path of the script
+BASE_PATH=$(dirname "$0")
 
 entry_file=$2
 entry_file_name=$(echo $2 | cut -d'.' -f1)
@@ -18,11 +19,14 @@ entry_file_name=$(echo $2 | cut -d'.' -f1)
 # Execute entry file with standard input
 case $entry_file in
   *.java) #.class
+    "$BASE_PATH"/require-command javac
     javac $1/${entry_file}
     ;;
   *.c)    # .out
+    "$BASE_PATH"/require-command gcc
     gcc $1/${entry_file} -o "$1/${entry_file_name}.out"
     ;;
   *.cpp)  # .out
+    "$BASE_PATH"/require-command g++
     g++ $1/${entry_file} -o "$1/${entry_file_name}.out"
 esac

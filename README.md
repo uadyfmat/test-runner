@@ -65,7 +65,7 @@ The file `spec.inout` can contain as many of these `//in//$$out$$` pairs as requ
 
 ## Supported languages
 
-Can be found by running: `test-runner --help`.
+The supported languages are listed in [Installation and usage](#installation-and-usage).
 
 Supporting a new **compiled** language requires the following changes:
 

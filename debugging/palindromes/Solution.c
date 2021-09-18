@@ -37,6 +37,24 @@ char *removeWhitespace(char phrase[])
   return noWhitespacePhrase;
 }
 
+// Code of this function taken from:
+// https://stackoverflow.com/a/8534275/12591546
+// For some reason, strrev is not found when running on Linux.
+char *strrev(char *str)
+{
+  char *p1, *p2;
+
+  if (!str || !*str)
+    return str;
+  for (p1 = str, p2 = str + strlen(str) - 1; p2 > p1; ++p1, --p2)
+  {
+    *p1 ^= *p2;
+    *p2 ^= *p1;
+    *p1 ^= *p2;
+  }
+  return str;
+}
+
 char *isPalindrome(char phrase[])
 {
   char *isPalindrome = malloc(sizeof(char) * 3);
