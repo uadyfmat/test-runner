@@ -27,7 +27,7 @@ Run `test-runner --help` to get a more thorough help message.
 |Java|`javac` and `java`|
 |C|`gcc`|
 |C++|`g++`|
-|Python|`python`|
+|Python|`python` or `python3`|
 
 For each of the commands, you can usually learn if they are available by running `[command] --help` or `[command] --version`. For instance, `gcc --version` should print the version of the C compiler.
 
