@@ -4,5 +4,6 @@ module.exports = {
 
   // Properties set at runtime:
   // - enableErrorExitCode: boolean
+  // - targetLanguage: string
   setAtRuntime: {},
 };

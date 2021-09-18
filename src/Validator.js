@@ -12,7 +12,14 @@ Validator.performAllValidations = function (targetDirectory) {
   errors = validateTargetDirExists(targetDirectory);
   printAndExitOnError(errors);
 
-  errors = validateTargetDirIsValid(targetDirectory);
+  if (config.setAtRuntime.targetLanguage) {
+    errors = validateTargetLanguageIsSupported(
+      config.setAtRuntime.targetLanguage
+    );
+    printAndExitOnError(errors);
+  }
+
+  errors = validateTargetDirContents(targetDirectory);
   printAndExitOnError(errors);
 };
 
@@ -37,7 +44,20 @@ function validateTargetDirExists(targetDirectory) {
   return errors;
 }
 
-function validateTargetDirIsValid(targetDirectory) {
+function validateTargetLanguageIsSupported(targetLanguage) {
+  const errors = new ErrorMessages();
+
+  if (!config.supportedLanguages.includes(targetLanguage)) {
+    errors.addError(
+      `Target language '${targetLanguage}' is not supported.\n` +
+        `  Supported languages: ${config.supportedLanguages}`
+    );
+  }
+
+  return errors;
+}
+
+function validateTargetDirContents(targetDirectory) {
   const absolutePathTargetDir = path.resolve(targetDirectory);
   const errors = new ErrorMessages();
 
@@ -51,7 +71,12 @@ function validateTargetDirIsValid(targetDirectory) {
   }
 
   let validSolutionFileExists = false;
-  for (extension of config.supportedLanguages) {
+
+  const targetSolutionFileExtensions = config.setAtRuntime.targetLanguage
+    ? [config.setAtRuntime.targetLanguage]
+    : config.supportedLanguages;
+
+  for (extension of targetSolutionFileExtensions) {
     if (
       fs.existsSync(
         path.join(
@@ -66,11 +91,18 @@ function validateTargetDirIsValid(targetDirectory) {
   }
 
   if (!validSolutionFileExists) {
-    errors.addError(
-      `Solution file of a supported language is not present in target directory.\n` +
-        `  Target directory: ${absolutePathTargetDir}\n` +
-        `  Supported laguages: ${config.supportedLanguages}`
-    );
+    if (config.setAtRuntime.targetLanguage) {
+      errors.addError(
+        `Solution file of language '${config.setAtRuntime.targetLanguage}' was not found in target directory.\n` +
+          `  Target directory: ${absolutePathTargetDir}`
+      );
+    } else {
+      errors.addError(
+        `Solution file of a supported language is not present in target directory.\n` +
+          `  Target directory: ${absolutePathTargetDir}\n` +
+          `  Supported laguages: ${config.supportedLanguages}`
+      );
+    }
   }
 
   return errors;

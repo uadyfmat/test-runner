@@ -36,11 +36,13 @@ TestRunner.prototype.run = function (targetDirectory) {
 function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
   const testResults = [];
 
+  const targetLanguages = config.setAtRuntime.targetLanguage
+    ? [config.setAtRuntime.targetLanguage]
+    : config.supportedLanguages.join("|");
+
   // Find solution file
   const solutionFile = shell.exec(
-    `bash '${__dirname}/shell/find-entry' '${targetDirectory}' "${config.supportedLanguages.join(
-      "|"
-    )}"`,
+    `bash '${__dirname}/shell/find-entry' '${targetDirectory}' "${targetLanguages}"`,
     { silent: true }
   ).stdout;
 

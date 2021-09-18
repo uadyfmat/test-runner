@@ -16,15 +16,24 @@ The general API of the CLI is the following:
 Usage: test-runner [options] [dir]
 ```
 
-Use `--help` to get a more thorough help message.
+Run `test-runner --help` to get a more thorough help message.
 
 `[dir]` expects a [valid coding exercise project structure](#coding-exercise-project-structure).
 
-**Notice that you must separately install the language-specific compiler or interpreter for your language of choice.** For instance, when working with Java, make sure that the commands `javac` and `java` are available in the terminal.
+**Notice that you must separately install the language-specific compiler, runtime or interpreter for your language of choice.**
+
+|Language| Required available commands |
+|---|---|
+|Java|`javac` and `java`|
+|C|`gcc`|
+|C++|`g++`|
+|Python|`python` or `python3`|
+
+For each of the commands, you can usually learn if they are available by running `[command] --help` or `[command] --version`. For instance, `gcc --version` should print the version of the C compiler.
 
 ## Coding exercise project structure
 
-Test Runner works on a directory like `exercise-name`, as shown below. A `Solution` file in a [supported language](#supported-languages) is required, as well as a [valid `spec.inout`](#test-cases-file-specinout) file. A `README.md` is the recommended way to explain what the exercise is about, although is not required by the CLI.
+Test Runner works on a directory like `exercise-name` (the name of the folder could be anything), as shown below. A `Solution` file in a [supported language](#supported-languages) is required, as well as a [valid `spec.inout`](#test-cases-file-specinout) file. A `README.md` is the recommended way to explain what the exercise is about, although is not required by the CLI.
 
 ```txt
 .
@@ -56,15 +65,16 @@ The file `spec.inout` can contain as many of these `//in//$$out$$` pairs as requ
 
 ## Supported languages
 
-Can be found by running: `test-runner --help`.
+The supported languages are listed in [Installation and usage](#installation-and-usage).
 
 Supporting a new **compiled** language requires the following changes:
 
 - Update [compile](./src/shell/compile) and [run](./src/shell/run) to add the required commands.
 - Update [clean](./src/shell/clean) to remove the new compilation output.
 - Update [config.js](./src/config.js) to add the new supported source language extension.
+- Update this README file to add the required commands in the section [Installation and usage](#installation-and-usage).
 
-If the language is **interpreted**, it is only required to update [run](./src/shell/run) and [config.js](./src/config.js).
+If the language is **interpreted**, it is only required to update [run](./src/shell/run), [config.js](./src/config.js) and this README.
 
 ## Development
 
@@ -94,62 +104,14 @@ Order of imports:
 
 ### Sample `Solution` and `spec.inout` files
 
-### `Solution.java`
+The folder [debugging](./debugging) contains a sample exercise, palindromes, with its `spec.inout` and `Solution` files. For debugging, run test-runner against a specific solution, e.g.:
 
-```java
-import java.util.Scanner;
-
-public class Solution {
-
-  public static void main(String[] args) {
-    Scanner scanner = new Scanner(System.in);
-
-    while (scanner.hasNextLine()) {
-      String line = scanner.nextLine();
-      System.out.println(isPalindrome(line));
-    }
-
-    scanner.close();
-  }
-
-  public static String isPalindrome(String phrase) {
-    String originalNoSpaces = phrase.replaceAll("\\s", "");
-    String reversedNoSpaces = new StringBuilder(phrase)
-        .reverse().toString().replaceAll("\\s", "");
-
-    return originalNoSpaces.equalsIgnoreCase(reversedNoSpaces)
-        ? "yes" : "no";
-  }
-}
+```bash
+./src/cli.js --language py debugging/palindromes
 ```
 
-### `spec.inout`
+Or to use the installed CLI:
 
-```txt
-//
-Amor a Roma
-//
-$$
-yes
-$$
-
-//
-Amor a Roma
-Salida a la casa
-Anita lava la tina
-//
-$$
-yes
-no
-yes
-$$
-
-//
-7887
-123
-//
-$$
-yes
-no
-$$
+```bash
+test-runner --language py debugging/palindromes
 ```
