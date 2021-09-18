@@ -22,7 +22,7 @@ TestRunner.prototype.run = function (targetDirectory) {
   );
   const testResults = testSolution(parsedSpec, targetDirectory);
 
-  const exerciseHeading = getExerciseHeading(targetDirectory);
+  const exerciseHeading = getExerciseHeading();
   const summaryResults = generateSummaryResults(testResults);
   const fullResults = generateAsciiTableOutput(parsedSpec, testResults);
 
@@ -127,8 +127,8 @@ function generateSummaryResults(testResults) {
   return `Tests run: ${testsRun}, Failures: ${failures}`;
 }
 
-function getExerciseHeading(targetDirectory) {
-  return `Exercise: ${path.basename(path.resolve(targetDirectory))}`;
+function getExerciseHeading() {
+  return `Exercise: ${config.setAtRuntime.exerciseName}`;
 }
 
 module.exports = TestRunner;

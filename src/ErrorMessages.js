@@ -15,7 +15,7 @@ ErrorMessages.prototype.hasErrors = function () {
 };
 
 ErrorMessages.prototype.toString = function () {
-  let message = "Errors:\n";
+  let message = "";
 
   for (error of this.errors) {
     message = message.concat(`- ${error}\n`);

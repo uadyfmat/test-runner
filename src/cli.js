@@ -3,6 +3,8 @@
 const TestRunner = require("./index");
 const config = require("./config");
 
+const path = require("path");
+
 // Parse command line arguments
 const argv = require("yargs")(process.argv.slice(2))
   .usage("Usage: test-runner [options] [dir]")
@@ -39,5 +41,6 @@ const argv = require("yargs")(process.argv.slice(2))
 
 config.setAtRuntime.enableErrorExitCode = argv.enableErrorExitCode;
 config.setAtRuntime.targetLanguage = argv.language;
+config.setAtRuntime.exerciseName = path.basename(path.resolve(argv.dir));
 
 new TestRunner().run(argv.dir);

@@ -25,7 +25,9 @@ Validator.performAllValidations = function (targetDirectory) {
 
 function printAndExitOnError(errors) {
   if (errors.hasErrors()) {
-    console.log(errors.toString());
+    console.error(`Exercise: ${config.setAtRuntime.exerciseName}`);
+    console.error("Errors attempting to run the exercise:");
+    console.error(errors.toString());
     process.exit(config.setAtRuntime.enableErrorExitCode ? 1 : 0);
   }
 }
