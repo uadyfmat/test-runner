@@ -6,7 +6,7 @@
 const SpecParser = require("./SpecParser");
 const Validator = require("./Validator");
 const config = require("./config");
-const { getExerciseHeading } = require("./util");
+const { concatMultipleTimes, getExerciseHeading } = require("./util");
 
 const path = require("path");
 
@@ -23,12 +23,13 @@ TestRunner.prototype.run = function (targetDirectory) {
   );
   const testResults = testSolution(parsedSpec, targetDirectory);
 
-  const summaryResults = generateSummaryOneLineOutput(testResults);
-  const fullResults = generateSummaryTableOutput(testResults);
+  const summaryOneLineResults = generateSummaryOneLineOutput(testResults);
+  const summaryTableResults = generateSummaryTableOutput(testResults);
 
-  console.log(getExerciseHeading()); // Print exercise heading
-  console.log(summaryResults); // Print results summary
-  console.log(fullResults); // Print full results
+  console.log(getExerciseHeading());
+  console.log(summaryOneLineResults);
+  console.log(summaryTableResults);
+  printVerboseResults(parsedSpec, testResults);
 
   process.exit(determineExitCode(testResults));
 };
@@ -133,6 +134,29 @@ function generateSummaryTableOutput(testResults) {
   }
 
   return table.stringify();
+}
+
+function printVerboseResults(parsedSpec, testResults) {
+  const rightPadding = concatMultipleTimes(" ", 30);
+
+  for (let i = 0; i < parsedSpec.length; i++) {
+    const table = new LeTable();
+
+    const status = testResults[i].status
+      ? `\x1b[1m\x1b[32mPASSING${rightPadding}\x1b[0m\x1b[0m`
+      : `\x1b[1m\x1b[31mFAILING${rightPadding}\x1b[0m\x1b[0m`;
+    table.addRow([`#${i + 1}`, status]);
+
+    table.addRow(["Input", parsedSpec[i].in]);
+    table.addRow(["Expected\noutput", parsedSpec[i].out]);
+
+    const actualOutputValue = testResults[i].status
+      ? "\x1b[30;1m(same as expected output)\x1b[31;1m"
+      : testResults[i].actualOutput;
+    table.addRow(["Actual\noutput", actualOutputValue]);
+
+    console.log(table.stringify());
+  }
 }
 
 module.exports = TestRunner;
