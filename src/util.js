@@ -7,7 +7,7 @@ function getExerciseName(targetDirectory) {
 }
 
 function getExerciseHeading() {
-  return `Exercise: ${config.setAtRuntime.exerciseName}`;
+  return `\nExercise: ${config.setAtRuntime.exerciseName}`;
 }
 
 module.exports = { getExerciseName, getExerciseHeading };

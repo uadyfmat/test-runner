@@ -23,8 +23,8 @@ TestRunner.prototype.run = function (targetDirectory) {
   );
   const testResults = testSolution(parsedSpec, targetDirectory);
 
-  const summaryResults = generateSummaryResults(testResults);
-  const fullResults = generateAsciiTableOutput(parsedSpec, testResults);
+  const summaryResults = generateSummaryOneLineOutput(testResults);
+  const fullResults = generateSummaryTableOutput(testResults);
 
   console.log(getExerciseHeading()); // Print exercise heading
   console.log(summaryResults); // Print results summary
@@ -83,7 +83,7 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
       expectedOutput = expectedOutput.replace(/(\r?\n)$/g, "");
     }
 
-    testResults.push(actualOutput === expectedOutput);
+    testResults.push({ status: actualOutput === expectedOutput, actualOutput });
   }
 
   // Clean compilation files, if any
@@ -96,20 +96,33 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
 
 function determineExitCode(testResults) {
   if (config.setAtRuntime.enableErrorExitCode) {
-    return testResults.find((result) => result === false) === false ? 1 : 0;
+    return testResults.find((result) => result.status === false) === false
+      ? 1
+      : 0;
   }
   return 0;
 }
 
-function generateAsciiTableOutput(parsedSpec, testResults) {
-  const heading = ["#", "Input", "Output", "Passed"];
+function generateSummaryOneLineOutput(testResults) {
+  const testsRun = testResults.length;
+  const failures = testResults.filter(
+    (result) => result.status === false
+  ).length;
+
+  return `Tests run: ${testsRun}, Failures: ${failures}`;
+}
+
+function generateSummaryTableOutput(testResults) {
+  const heading = ["#", "Status"];
   const rows = [];
 
-  for (let i = 0; i < parsedSpec.length; i++) {
+  for (let i = 0; i < testResults.length; i++) {
     // See StackOverflow answer for console colors:
     // https://stackoverflow.com/a/41407246/12591546
-    const passed = testResults[i] ? "\x1b[32mYES\x1b[0m" : "\x1b[31mNO\x1b[0m";
-    rows.push([i + 1, parsedSpec[i].in, parsedSpec[i].out, passed]);
+    const status = testResults[i].status
+      ? "\x1b[1m\x1b[32mPASSING\x1b[0m\x1b[0m"
+      : "\x1b[1m\x1b[31mFAILING\x1b[0m\x1b[0m";
+    rows.push([i + 1, status]);
   }
 
   const table = new LeTable();
@@ -120,13 +133,6 @@ function generateAsciiTableOutput(parsedSpec, testResults) {
   }
 
   return table.stringify();
-}
-
-function generateSummaryResults(testResults) {
-  const testsRun = testResults.length;
-  const failures = testResults.filter((result) => result === false).length;
-
-  return `Tests run: ${testsRun}, Failures: ${failures}`;
 }
 
 module.exports = TestRunner;
