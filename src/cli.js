@@ -32,6 +32,13 @@ const argv = require("yargs")(process.argv.slice(2))
         Values: ${config.supportedLanguages.join(", ")}
         Example: test-runner -l py .`,
         type: "string",
+      })
+      .option("v", {
+        alias: "verbose",
+        description: `Use verbose output. In addition to the default
+        output, also display status data per test case.`,
+        type: "boolean",
+        default: false,
       });
   })
   .help()
@@ -42,4 +49,4 @@ config.setAtRuntime.enableErrorExitCode = argv.enableErrorExitCode;
 config.setAtRuntime.targetLanguage = argv.language;
 config.setAtRuntime.exerciseName = getExerciseName(argv.dir);
 
-new TestRunner().run(argv.dir);
+new TestRunner().run(argv.dir, argv.verbose);
