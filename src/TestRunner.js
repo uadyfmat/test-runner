@@ -27,9 +27,9 @@ TestRunner.prototype.run = function (targetDirectory, isVerboseEnabled) {
   const summaryTableResults = generateSummaryTableOutput(testResults);
 
   console.log(getExerciseHeading());
-  console.log(summaryOneLineResults);
   console.log(summaryTableResults);
   isVerboseEnabled && printVerboseResults(parsedSpec, testResults);
+  console.log(summaryOneLineResults);
 
   process.exit(determineExitCode(testResults));
 };
@@ -106,11 +106,16 @@ function determineExitCode(testResults) {
 
 function generateSummaryOneLineOutput(testResults) {
   const testsRun = testResults.length;
-  const failures = testResults.filter(
-    (result) => result.status === false
+  const successes = testResults.filter(
+    (result) => result.status === true
   ).length;
 
-  return `Tests run: ${testsRun}, Failures: ${failures}`;
+  let areAllTestsPassing = successes === testResults.length;
+  const congratsMessage = "🦄🌟🎉🦄🌟🎉";
+
+  return `Passing tests: ${successes}/${testsRun} ${
+    areAllTestsPassing ? congratsMessage : ""
+  }`;
 }
 
 function generateSummaryTableOutput(testResults) {

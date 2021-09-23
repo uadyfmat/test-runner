@@ -17,7 +17,7 @@ function getExerciseName(targetDirectory) {
 }
 
 function getExerciseHeading() {
-  return `\nExercise: ${config.setAtRuntime.exerciseName}`;
+  return `\n\x1b[7m${config.setAtRuntime.exerciseName}\x1b[0m`;
 }
 
 module.exports = { concatMultipleTimes, getExerciseName, getExerciseHeading };
