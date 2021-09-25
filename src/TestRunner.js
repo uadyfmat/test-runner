@@ -99,9 +99,9 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
 
 function determineExitCode(testResults) {
   if (config.setAtRuntime.enableErrorExitCode) {
-    return testResults.find((result) => result.status === false) === false
-      ? 1
-      : 0;
+    return testResults.find((result) => result.status === false) === undefined
+      ? 0
+      : 1;
   }
   return 0;
 }
@@ -157,10 +157,9 @@ function printVerboseResults(parsedSpec, testResults) {
     table.addRow(["Input", parsedSpec[i].in]);
     table.addRow(["Expected\noutput", parsedSpec[i].out]);
 
-    const actualOutputValue = testResults[i].status
-      ? "\x1b[30;1m(same as expected output)\x1b[31;1m"
-      : testResults[i].actualOutput;
-    table.addRow(["Actual\noutput", actualOutputValue]);
+    if (testResults[i].status === false) {
+      table.addRow(["Actual\noutput", testResults[i].actualOutput]);
+    }
 
     console.log(table.stringify());
   }
