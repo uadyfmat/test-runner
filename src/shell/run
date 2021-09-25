@@ -15,6 +15,9 @@
 # Base path of the script
 BASE_PATH=$(dirname "$0")
 
+# Imports
+source "$BASE_PATH"/_command
+
 # Read standard input
 STDIN=$(cat -)
 
@@ -27,7 +30,7 @@ case $2 in
   # Compiled languages
   #######################
   *.java)
-    "$BASE_PATH"/require-command java
+    command_is_required java
     echo -e "${STDIN}" | java -cp $1 ${entry_file_name}
     ;;
   *.c)
@@ -46,8 +49,8 @@ case $2 in
     # which would receive a list of commands and return the first existent
     # command, or a magic error value otherwise.
 
-    hasPython=$("$BASE_PATH"/has-command python)
-    hasPython3=$("$BASE_PATH"/has-command python3)
+    hasPython=$(command_exists python)
+    hasPython3=$(command_exists python3)
     pythonCommand=""
 
     if [ "$hasPython" = "true" ]; then

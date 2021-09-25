@@ -1,0 +1,42 @@
+#!/bin/bash
+
+# Description:
+# Provided a command name, print 'true' when the command is available,
+# else print 'false'.
+#
+# Parameters:
+# $1: Name of the command.
+#
+# Output (stdout):
+# 'true' when the command is available.
+# 'false' when the command is NOT available.
+#
+# Example invocation:
+# source ./src/shell/_command
+# command_exists ghc
+function command_exists {
+  path_of_executable=$(command -v $1)
+
+  if [ -n "$path_of_executable" ]; then
+    echo true
+  else
+    echo false
+  fi
+}
+
+
+# Description:
+# Provided a command name, print an error message if the command is
+# NOT available and exit with 1. Else, don't do anything.
+#
+# Parameters:
+# $1: Name of the command.
+#
+# Example invocation:
+# source ./src/shell/_command
+# command_is_required ghc
+function command_is_required {
+  command -v $1 > /dev/null 2>&1 || {
+    echo "Command '$1' is required but was not found." >&2; exit 1;
+  }
+}
