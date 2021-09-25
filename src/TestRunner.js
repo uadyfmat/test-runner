@@ -6,7 +6,7 @@
 const SpecParser = require("./SpecParser");
 const Validator = require("./Validator");
 const config = require("./config");
-const { getExerciseHeading } = require("./util");
+const { concatMultipleTimes, getExerciseHeading } = require("./util");
 
 const path = require("path");
 
@@ -15,7 +15,7 @@ const LeTable = require("le-table");
 
 function TestRunner() {}
 
-TestRunner.prototype.run = function (targetDirectory) {
+TestRunner.prototype.run = function (targetDirectory, isShortOutputEnabled) {
   Validator.performAllValidations(targetDirectory);
 
   const parsedSpec = new SpecParser().parseSpec(
@@ -23,12 +23,15 @@ TestRunner.prototype.run = function (targetDirectory) {
   );
   const testResults = testSolution(parsedSpec, targetDirectory);
 
-  const summaryResults = generateSummaryResults(testResults);
-  const fullResults = generateAsciiTableOutput(parsedSpec, testResults);
+  const summaryOneLineResults = generateSummaryOneLineOutput(testResults);
+  const summaryTableResults = generateSummaryTableOutput(testResults);
 
-  console.log(getExerciseHeading()); // Print exercise heading
-  console.log(summaryResults); // Print results summary
-  console.log(fullResults); // Print full results
+  console.log(getExerciseHeading());
+  console.log(summaryTableResults);
+  if (!isShortOutputEnabled) {
+    printVerboseResults(parsedSpec, testResults);
+  }
+  console.log(summaryOneLineResults);
 
   process.exit(determineExitCode(testResults));
 };
@@ -83,7 +86,7 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
       expectedOutput = expectedOutput.replace(/(\r?\n)$/g, "");
     }
 
-    testResults.push(actualOutput === expectedOutput);
+    testResults.push({ status: actualOutput === expectedOutput, actualOutput });
   }
 
   // Clean compilation files, if any
@@ -96,20 +99,38 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
 
 function determineExitCode(testResults) {
   if (config.setAtRuntime.enableErrorExitCode) {
-    return testResults.find((result) => result === false) === false ? 1 : 0;
+    return testResults.find((result) => result.status === false) === false
+      ? 1
+      : 0;
   }
   return 0;
 }
 
-function generateAsciiTableOutput(parsedSpec, testResults) {
-  const heading = ["#", "Input", "Output", "Passed"];
+function generateSummaryOneLineOutput(testResults) {
+  const testsRun = testResults.length;
+  const successes = testResults.filter(
+    (result) => result.status === true
+  ).length;
+
+  let areAllTestsPassing = successes === testResults.length;
+  const congratsMessage = "🦄🌟🎉🦄🌟🎉";
+
+  return `Passing tests: ${successes}/${testsRun} ${
+    areAllTestsPassing ? congratsMessage : ""
+  }`;
+}
+
+function generateSummaryTableOutput(testResults) {
+  const heading = ["#", "Status"];
   const rows = [];
 
-  for (let i = 0; i < parsedSpec.length; i++) {
+  for (let i = 0; i < testResults.length; i++) {
     // See StackOverflow answer for console colors:
     // https://stackoverflow.com/a/41407246/12591546
-    const passed = testResults[i] ? "\x1b[32mYES\x1b[0m" : "\x1b[31mNO\x1b[0m";
-    rows.push([i + 1, parsedSpec[i].in, parsedSpec[i].out, passed]);
+    const status = testResults[i].status
+      ? "\x1b[1m\x1b[32mPASSING\x1b[0m\x1b[0m"
+      : "\x1b[1m\x1b[31mFAILING\x1b[0m\x1b[0m";
+    rows.push([i + 1, status]);
   }
 
   const table = new LeTable();
@@ -122,11 +143,27 @@ function generateAsciiTableOutput(parsedSpec, testResults) {
   return table.stringify();
 }
 
-function generateSummaryResults(testResults) {
-  const testsRun = testResults.length;
-  const failures = testResults.filter((result) => result === false).length;
+function printVerboseResults(parsedSpec, testResults) {
+  const rightPadding = concatMultipleTimes(" ", 30);
 
-  return `Tests run: ${testsRun}, Failures: ${failures}`;
+  for (let i = 0; i < parsedSpec.length; i++) {
+    const table = new LeTable();
+
+    const status = testResults[i].status
+      ? `\x1b[1m\x1b[32mPASSING${rightPadding}\x1b[0m\x1b[0m`
+      : `\x1b[1m\x1b[31mFAILING${rightPadding}\x1b[0m\x1b[0m`;
+    table.addRow([`#${i + 1}`, status]);
+
+    table.addRow(["Input", parsedSpec[i].in]);
+    table.addRow(["Expected\noutput", parsedSpec[i].out]);
+
+    const actualOutputValue = testResults[i].status
+      ? "\x1b[30;1m(same as expected output)\x1b[31;1m"
+      : testResults[i].actualOutput;
+    table.addRow(["Actual\noutput", actualOutputValue]);
+
+    console.log(table.stringify());
+  }
 }
 
 module.exports = TestRunner;
