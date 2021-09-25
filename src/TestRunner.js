@@ -99,9 +99,9 @@ function testSolution(parsedSpec, targetDirectory, ignoreEndingNewLine = true) {
 
 function determineExitCode(testResults) {
   if (config.setAtRuntime.enableErrorExitCode) {
-    return testResults.find((result) => result.status === false) === false
-      ? 1
-      : 0;
+    return testResults.find((result) => result.status === false) === undefined
+      ? 0
+      : 1;
   }
   return 0;
 }
