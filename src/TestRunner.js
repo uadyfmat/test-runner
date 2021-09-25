@@ -15,7 +15,7 @@ const LeTable = require("le-table");
 
 function TestRunner() {}
 
-TestRunner.prototype.run = function (targetDirectory, isVerboseEnabled) {
+TestRunner.prototype.run = function (targetDirectory, isShortOutputEnabled) {
   Validator.performAllValidations(targetDirectory);
 
   const parsedSpec = new SpecParser().parseSpec(
@@ -28,7 +28,9 @@ TestRunner.prototype.run = function (targetDirectory, isVerboseEnabled) {
 
   console.log(getExerciseHeading());
   console.log(summaryTableResults);
-  isVerboseEnabled && printVerboseResults(parsedSpec, testResults);
+  if (!isShortOutputEnabled) {
+    printVerboseResults(parsedSpec, testResults);
+  }
   console.log(summaryOneLineResults);
 
   process.exit(determineExitCode(testResults));

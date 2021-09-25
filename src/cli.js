@@ -33,10 +33,11 @@ const argv = require("yargs")(process.argv.slice(2))
         Example: test-runner -l py .`,
         type: "string",
       })
-      .option("v", {
-        alias: "verbose",
-        description: `Use verbose output. In addition to the default
-        output, also display status data per test case.`,
+      .option("s", {
+        alias: "short",
+        description: `Use short output. Only display the status per
+        test case, don't show input or expected/actual
+        outputs.`,
         type: "boolean",
         default: false,
       });
@@ -49,4 +50,4 @@ config.setAtRuntime.enableErrorExitCode = argv.enableErrorExitCode;
 config.setAtRuntime.targetLanguage = argv.language;
 config.setAtRuntime.exerciseName = getExerciseName(argv.dir);
 
-new TestRunner().run(argv.dir, argv.verbose);
+new TestRunner().run(argv.dir, argv.short);
