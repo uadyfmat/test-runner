@@ -86,7 +86,25 @@ When using Windows, use GitBash, not CMD.
 
 ### Code guidelines
 
-Two types of JavaScript files are used:
+Two _types_ of **Shell** files are used:
+
+1. 'Scripts', which are directly executed by JavaScript.
+2. 'Meant-to-be-imported', which contain functions or other definitions that are required by the shell scripts files.
+
+Naming conventions:
+
+- Shell file type #1: Use `kebab-case`, i.e. all lowercase with a dash between words.
+- Shell file type #2: Use `_kebab-case` but notice the preceding underscore.
+
+Documentation conventions:
+
+Documentation for Shell files covers the following points:
+
+- Description: What is the purpose of the script or function.
+- Parameters: What are the parameters that the script or function expects, and what does each mean.
+- Example invocation: Working example invocation, from a terminal opened at the root of the project.
+
+Two _types_ of **JavaScript** files are used:
 
 1. 'Class-like', where each file defines a constructor function and methods attached to the constructed object. This is similar to Java's idea of 1 class per file. Here, the constructor function is the first line after imports, then prototype attachments follow, then private functions and finally the export of the constructor.
 2. 'Free-form', where the file has a config object, does some imports, or performs or is something else which would not benefit from a constructor function.
@@ -96,7 +114,7 @@ Naming conventions:
 - JS file type #1: Use `PascalCase` for the file name, equal to the name of the constructor function.
 - JS file type #2: Use `camelCase` for the file name, whatever makes sense.
 
-Order of imports:
+Order of imports convention:
 
 1. Local imports
 2. Node.js imports
