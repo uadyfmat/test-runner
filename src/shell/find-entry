@@ -16,6 +16,6 @@
 entry_file_name=Solution
 
 # Find first file which matches expected entry
-entry_file=$(ls $1 | grep -P "^${entry_file_name}[.]($2)$" | head -1)
+entry_file=$(ls $1 | grep -E "^${entry_file_name}[.]($2)$" | head -1)
 
 echo $entry_file
