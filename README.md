@@ -4,7 +4,13 @@ Test Runner (`test-runner`) is a command-line tool to test a code file against s
 
 ## Installation and usage
 
-Install using the following command:
+Before installing Test Runner, make sure to have the following installed:
+
+- Node.js v12 or greater.
+- NPM.
+- Git.
+
+Install Test Runner using the following command:
 
 ```txt
 npm i -g uadyfmat/test-runner
@@ -20,6 +26,8 @@ Run `test-runner --help` to get a more thorough help message.
 
 `[dir]` expects a [valid coding exercise project structure](#coding-exercise-project-structure).
 
+### Supported languages
+
 **Notice that you must separately install the language-specific compiler, runtime or interpreter for your language of choice.**
 
 |Language| Required available commands |
@@ -30,6 +38,16 @@ Run `test-runner --help` to get a more thorough help message.
 |Python|`python` or `python3`|
 
 For each of the commands, you can usually learn if they are available by running `[command] --help` or `[command] --version`. For instance, `gcc --version` should print the version of the C compiler.
+
+### Shells and terminals
+
+Test Runner uses **Bash scripts**, thus it is required that the host shell supports Bash (e.g. Bash itself or Zsh). Additionally, Test Runner displays emojis in some circumstances so ideally the terminal would support that.
+
+Per OS, consider the following:
+
+- macOS: The default terminal app is fine. macOS comes with Zsh as its default shell so it should also be fine.
+- Linux: The default terminal app should be fine. Linux distributions often come with Bash as its default shell so that's fine.
+- Windows: I suggest installing [Git Bash](https://git-scm.com/downloads) (Bash support) and open it using [Windows Terminal](https://www.microsoft.com/en-us/p/windows-terminal/9n0dx20hk701#activetab=pivot:overviewtab) (special chars support).
 
 ## Coding exercise project structure
 
@@ -63,9 +81,9 @@ $$
 
 The file `spec.inout` can contain as many of these `//in//$$out$$` pairs as required test cases.
 
-## Supported languages
+## Adding support for a new language
 
-The supported languages are listed in [Installation and usage](#installation-and-usage).
+The supported languages are listed in [Supported languages](#supported-languages).
 
 Supporting a new **compiled** language requires the following changes:
 
@@ -80,9 +98,9 @@ If the language is **interpreted**, it is only required to update [run](./src/sh
 
 ### Requirements
 
-- Node.js
-
-When using Windows, use GitBash, not CMD.
+- Node.js v12 or greater.
+- NPM.
+- Git.
 
 ### Code guidelines
 
