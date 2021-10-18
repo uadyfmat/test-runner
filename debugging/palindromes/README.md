@@ -1,12 +1,10 @@
-This is a sample exercise, useful for testing and debugging.
-
----
-
 # Palíndromos
 
-Un palíndromo es una cadena de caracteres que leída de izquierda a derecha o de derecha a izquierda lee igual. Por ejemplo: "Amor a roma".
+Un palíndromo es una cadena de caracteres que leída de izquierda a derecha o de derecha a izquierda lee igual. Por ejemplo: "Amor a Roma".
 
-Escribe un programa en Java, C, C++ o Python que lea una cadena de caracteres de entrada estándar e imprima a salida estándar "yes" cuando sí es un palíndromo; "no" de otra forma. El archivo debe llamarse `Solution`, p. ej.: `Solution.py`.
+Escribe un programa que lea _n_ cadenas de caracteres e imprima "yes" cuando la cadena es un palíndromo; "no" de otra forma.
+
+El archivo del programa debe llamarse `Solution`, p. ej.: `Solution.java`. Los datos se reciben por entrada estándar, y el programa debe imprimir el resultado a salida estándar.
 
 ## Entrada
 
@@ -14,9 +12,9 @@ La primera línea contiene un número entero _n_, el cual indica la cantidad de 
 
 ## Salida
 
-Por cada una de las _n_ líneas, la salida debe ser:
+Por cada una de las _n_ líneas, se debe imprimir en su propia línea:
 
-- `yes` cuando la cadena es un palíndromo.
+- `yes`, cuando la cadena es un palíndromo.
 - `no`, cuando no lo es.
 
 ## Ejemplos
