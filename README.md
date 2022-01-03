@@ -91,8 +91,9 @@ Supporting a new **compiled** language requires the following changes:
 - Update [clean](./src/shell/clean) to remove the new compilation output.
 - Update [config.js](./src/config.js) to add the new supported source language extension.
 - Update this README file to add the required commands in the section [Installation and usage](#installation-and-usage).
+- Might be necessary to add a GitHub action setup of the language tooling in the [workflow of the base template](https://github.com/uadyfmat/test-runner-plantilla-base/blob/main/.github/workflows/default.yml). This is so that the execution of the job has access to the required language commands, such as `node` or `java`.
 
-If the language is **interpreted**, it is only required to update [run](./src/shell/run), [config.js](./src/config.js) and this README.
+If the language is **interpreted**, it is required to do the same updates except for the scripts [compile](./src/shell/compile) and [clean](./src/shell/clean).
 
 ## Development
 
