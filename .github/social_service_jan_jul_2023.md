@@ -49,4 +49,6 @@ After doing the first experiment we were left with some feedback:
 
 ## Future alternatives
 
-> Jonathan - Mention the possible fix of including timeouts, using other tools such as GitHub Classroom, or creating a VS extension to run it locally.
+- After carrying out an investigation, it was found that applying timeouts to the jobs could allow executing the rest of the task and thus knowing the results that are sought and preventing them from freezing.
+- It is proposed to delve into the new options that Classroom is publishing for the automation of tests, currently some could have the same function without using the test-runner but the problem exists when multiple evaluations are required.
+- The possibility of integrating test-runner as an extension for vscode is raised, it is believed that it would allow easier use and would save installation and other problems encountered, in this way the tool would be merely supportive.
