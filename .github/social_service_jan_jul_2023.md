@@ -23,7 +23,9 @@ Finally, it is important to mention that the requirements included that the prof
 
 ### Experiment
 
-> Jonathan - Mention what we wanted, how we created the repo (add a link), and how we applied the exercises to the students.
+The idea was to test the usability and usefulness of the test runner. To do this, a classroom was created in github to publish a series of exercises that two groups of students would help us to solve and with this we could test the system. A task was automated in github, so that it would be executed when a student uploaded changes to its repository, the intention was to run the test-runner and thus know which exercises were solved correctly by the student and which were not.  Through a meeting and by sending emails, a link was shared with the students to access the classroom and thus generate their own repository, finally they were asked to generate the code that solved the exercises and to use the tool locally to validate their algorithms, in addition to asking them to upload their changes once they were finished.
+The classroom was generated using the template provided in the official documentation [`uadyfmat/test-runner-plantilla-base`](https://github.com/uadyfmat/test-runner-plantilla-base)
+
 
 ### Results
 
