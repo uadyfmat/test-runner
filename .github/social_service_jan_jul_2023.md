@@ -41,11 +41,37 @@ After doing the first experiment we were left with some feedback:
 
 ### Creating a reader
 
-> Rich - Mention the new objective, the requirements, what we got and link the repo.
+**Objective**
 
+The new objective was to create an application that could get all the repositories from the students to generate a report for the teacher with a summary of the students results.
+
+**Requirements**
+1. The application should be able to permit that the user enter his personal access token (with repository administration permissions).
+2. The application should be able to permit that the user defines the CSV file's name.
+3. The application should be able to read the data from the grades' CSV file that offers Github Classroom.
+4. The application should be able to determine which are the repositories to consult from the data obtained from the grades' CSV file.
+5. The application should be able to retrieve all the runs from a student's repository and get from them the following data:
+    * Id
+    * Event
+    * Status
+    * Conclusion
+6. The application should be able to retrieve all the logs from the runs from a student's  repository.
+7. The application should be able to determine, from the logs, the results obtained of a student in the validations of their exercises.
+8. The application should be able to generate a grupal report that contains a summary of the students' results.
+9. The application should be able to generate a report for each student that describes theirs results obtained from each run.
+10. The application offers options to print in console the reports' results.
+
+**What we got**
+The application's development was almost finished, covering most of the proposed requirements. Its functionality consists first in asking the user's token and after entering it, the application asks the CSV file's name.
+
+Once the CSV file's name is entered by the user, the application retrieve all the logs runs from each student's repository, along with the logs and finally, the results obtained of each student in the validations of their exercises.
+
+With this information, as an output the application generates global report (as a txt file) that contains a summary of the students' results, and for each student it includes their username, their repository name and their grades. 
+
+You can find this application's repository [here](https://github.com/uadyfmat/TestRunner-Log-Reader).
 ### Current state
 
-> Rich - Mention how we couldn't continue because of the job freezing issue.
+At the moment, even if the development of the application was almost finished, the tests failed in the sense that the runs and jobs couldn't work properly, because when they were executed, they froze as they consumed all the maximum memory that Github actions has by default. As a result, we couldn't implement either the requirement #9.
 
 ## Future alternatives
 
