@@ -62,6 +62,7 @@ The new objective was to create an application that could get all the repositori
 10. The application offers options to print in console the reports' results.
 
 **What we got**
+
 The application's development was almost finished, covering most of the proposed requirements. Its functionality consists first in asking the user's token and after entering it, the application asks the CSV file's name.
 
 Once the CSV file's name is entered by the user, the application retrieve all the logs runs from each student's repository, along with the logs and finally, the results obtained of each student in the validations of their exercises.
