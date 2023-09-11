@@ -15,16 +15,16 @@
 
 The project, identified as "SISTEMA DE APOYO PARA EL APRENDIZAJE DE PROGRAMACIÓN PARA ESTUDIANTES CON PROBLEMAS DE REZAGO Y DESERCIÓN" and conducted by the Dr. Edgar Cambranez Martínez, appeared as a strategy to solve the necessity of helping those students that have been struggling to keep up with their classes by providing them with both a repository full of many different exercises and a tool that would help them by testing their code and printing their results.
 
-Also, not only it would be of use to the student, but the teacher too. The best outcome would be providing every teacher with an easy to configure application that can display metrics and give a broader point of view of the current state of their students, and then they could design a set of problems perfectly fit to polish their capacities, leading to a continuous process of monitoring and reinforcing.
+Also, not only it would be of use to the student, but the teacher too. The best outcome would be providing every teacher with an easy to configure application that can display metrics and provide them with a broader point of view of the current state of their students. Then, they could design a set of problems to polish their abilities, leading to a continuous process of monitoring and reinforcing.
 
-Finally, it is important to mention that the requirements included that the professor should be able to post a set of exercises in a single repository and automatically test all of them every time a student uploaded their progress to their own repositories.
+Finally, it is important to mention that the professor should be able to post their entire list of exercises in a single repository, as well as the system must automatically test all of them every time a student upload their progress into their own repository.
 
 ## The first approach
 
 ### Experiment
 
-The idea was to test the usability and usefulness of the test runner. To do this, a classroom was created in github to publish a series of exercises that two groups of students would help us to solve and with this we could test the system. A task was automated in github, so that it would be executed when a student uploaded changes to its repository, the intention was to run the test-runner and thus know which exercises were solved correctly by the student and which were not.  Through a meeting and by sending emails, a link was shared with the students to access the classroom and thus generate their own repository, finally they were asked to generate the code that solved the exercises and to use the tool locally to validate their algorithms, in addition to asking them to upload their changes once they were finished.
-The classroom was generated using the template provided in the official documentation [`uadyfmat/test-runner-plantilla-base`](https://github.com/uadyfmat/test-runner-plantilla-base)
+The idea was to test the usability and usefulness of Test Runner. To do this, an assignment was created in GitHub Classroom with a series of exercises that two groups of students would help us to solve and, with this, we were going to test the system. A task was automated in github, so that it would be executed when a student uploaded changes to its repository, the intention was to run Test Runner and thus know which exercises were solved correctly by the student and which were not.  Through a meeting and by sending emails, a link was shared with the students to access the classroom and generate their repository, finally, they were asked to code their answers and to use the tool locally to validate their algorithms, in addition to asking them to upload their changes once they finished.
+The classroom was created using the template provided in the official documentation [`uadyfmat/test-runner-plantilla-base`](https://github.com/uadyfmat/test-runner-plantilla-base)
 
 
 ### Results
@@ -43,7 +43,7 @@ After doing the first experiment we were left with some feedback:
 
 **Objective**
 
-The new objective was to create an application that could get all the repositories from the students to generate a report for the teacher with a summary of the students results.
+The new objective was to create an application that could get all the repositories from the students to generate a report for the teacher with a summary of the students' results.
 
 **Requirements**
 1. The application should be able to permit that the user enter his personal access token (with repository administration permissions).
