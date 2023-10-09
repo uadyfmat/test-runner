@@ -79,3 +79,4 @@ At the moment, even if the development of the application was almost finished, t
 - After carrying out an investigation, it was found that applying timeouts to the jobs could allow executing the rest of the task and thus knowing the results that are sought and preventing them from freezing.
 - It is proposed to delve into the new options that Classroom is publishing for the automation of tests, currently some could have the same function without using the test-runner but the problem exists when multiple evaluations are required.
 - The possibility of integrating test-runner as an extension for vscode is raised, it is believed that it would allow easier use and would save installation and other problems encountered, in this way the tool would be merely supportive.
+> A new version has been released for test automation (at least the UI). It is recommended to explore again the possibilities it offers and whether any of them allow multiple evaluations.
