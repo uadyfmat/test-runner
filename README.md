@@ -152,3 +152,7 @@ Or to use the installed CLI:
 ```bash
 test-runner --language py debugging/palindromes
 ```
+
+## Social Service
+
+[Click here to see more about the social service project done during the first half of 2023.](./.github/social_service_jan_jul_2023.md)
