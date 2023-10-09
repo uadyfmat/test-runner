@@ -2,6 +2,7 @@
 
 ## Directory
 
+- [Responsible team](#responsible-team)
 - [About](#about)
 - [The first approach](#the-first-approach)
   - [Experiment](#experiment)
@@ -10,6 +11,12 @@
   - [Creating a reader](#creating-a-reader)
   - [Current state](#current-state)
 - [Future alternatives](#future-alternatives)
+
+## Responsible team
+
+- [Jonathan Gregorio Gómez Benítez](https://github.com/JonathanGGB)
+- [Joshua Immanuel Meza Magaña](https://github.com/JoshuaMeza)
+- [Ricardo Alejandro Grimaldo Patiño](https://github.com/RicGrimaldo)
 
 ## About
 
